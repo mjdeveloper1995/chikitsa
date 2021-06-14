@@ -807,10 +807,11 @@ class _PatientRegistrationState extends State<PatientRegistration> {
         if (!jsonData.containsKey("data")) {
           showAlertDialog(context, jsonData["message"]);
         } else
-          Navigator.pushAndRemoveUntil(
-              context,
-              MaterialPageRoute(builder: (BuildContext context) => Home()),
-              (route) => false);
+          // Navigator.pushAndRemoveUntil(
+          //     context,
+          //     MaterialPageRoute(builder: (BuildContext context) => Home()),
+          //     (route) => false);
+    Navigator.pop(context);
       } else {
         showAlertDialog(context, response.body.toString());
       }

@@ -552,11 +552,12 @@ class _DoctorRegistrationState extends State<DoctorRegistration> {
           if (!jsonData.containsKey("data")) {
             showAlertDialog(context, jsonData["message"]);
           } else
-            Navigator.pushAndRemoveUntil(
-                context,
-                MaterialPageRoute(builder: (BuildContext context) => DoctorHome()),
-                    (route) => false
-            );
+            // Navigator.pushAndRemoveUntil(
+            //     context,
+            //     MaterialPageRoute(builder: (BuildContext context) => DoctorHome()),
+            //         (route) => false
+            // );
+            Navigator.pop(context);
         } else
           showAlertDialog(context, response.body.toString());
       } else {
