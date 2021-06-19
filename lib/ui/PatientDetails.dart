@@ -1,10 +1,8 @@
 import 'package:chikitsa/main.dart';
-import 'package:chikitsa/ui/AddMedicine.dart';
-import 'package:chikitsa/ui/AllMedications.dart';
 import 'package:chikitsa/ui/Appointment.dart';
 import 'package:chikitsa/ui/ChangeDoctor.dart';
 import 'package:chikitsa/ui/Home.dart';
-import 'package:chikitsa/ui/MissedMedicine.dart';
+import 'package:chikitsa/ui/PatientProfile.dart';
 import 'package:chikitsa/ui/Patient_AllMedications.dart';
 import 'package:chikitsa/ui/Profile.dart';
 import 'package:chikitsa/utils/AppColors.dart';
@@ -13,11 +11,17 @@ import 'package:chikitsa/utils/screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class PatientDetails extends StatefulWidget {
-  PatientDetails({Key key, this.title});
+  PatientDetails({this.id,this.name,this.mobile,this.email,this.age,this.address});
 
-  final String title;
+  final String id;
+  final String name;
+  final String address;
+  final String age;
+  final String mobile;
+  final String email;
 
   @override
   _PatientDetailsState createState() => _PatientDetailsState();
@@ -117,7 +121,7 @@ class _PatientDetailsState extends State<PatientDetails> {
                             left: SizeConfig.blockSizeVertical * 2,
                           ),
                           child: Text(
-                            "Sonu Kumar",
+                            widget.name,
                             textAlign: TextAlign.left,
                             style: TextStyle(
                                 letterSpacing: 1.0,
@@ -132,7 +136,13 @@ class _PatientDetailsState extends State<PatientDetails> {
                     GestureDetector(
                       onTap: () {
                         Navigator.of(context).push(MaterialPageRoute(
-                            builder: (BuildContext context) => Profile()));
+                            builder: (BuildContext context) => PatientProfile(
+                              mobile: widget.mobile,
+                              name: widget.name,
+                              email: widget.email,
+                              address: widget.address,
+                              age: widget.age,
+                            )));
                       },
                       child: Container(
                         margin: EdgeInsets.only(
@@ -403,25 +413,37 @@ class _PatientDetailsState extends State<PatientDetails> {
                                       letterSpacing: 1.0),
                                 ),
                               ),
-                              Container(
+                              GestureDetector(
+                                onTap: (){
+                                  launch(
+                                      'tel://${widget.mobile ?? ''}');
+                                },
+                                child: Container(
 
-                                child: Image.asset(
-                                  "assets/images/phone.png",
-                                  height: 30,
-                                  width: 30,
+                                  child: Image.asset(
+                                    "assets/images/phone.png",
+                                    height: 30,
+                                    width: 30,
+                                  ),
                                 ),
                               ),
-                              Container(
-                                margin: EdgeInsets.only(right: SizeConfig.blockSizeHorizontal *3),
-                                child: Text(
-                                  ": 7014485557",
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                      color: Colors.black87,
-                                      fontFamily: 'Lato-Regular',
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 14,
-                                      letterSpacing: 1.0),
+                              GestureDetector(
+                                onTap: (){
+                                  launch(
+                                      'tel://${widget.mobile ?? ''}');
+                                },
+                                child: Container(
+                                  margin: EdgeInsets.only(right: SizeConfig.blockSizeHorizontal *3),
+                                  child: Text(
+                                    ": ${widget.mobile}",
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                        color: Colors.black87,
+                                        fontFamily: 'Lato-Regular',
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 14,
+                                        letterSpacing: 1.0),
+                                  ),
                                 ),
                               )
                             ],

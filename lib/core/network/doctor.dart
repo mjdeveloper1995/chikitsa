@@ -1,37 +1,37 @@
 import 'package:chikitsa/core/network/endpoint.dart';
 import 'package:http/http.dart' as http;
 
-class AuthenticationService {
-  static Future<http.Response> registration(Map<String,dynamic> formData) async {
+class DoctorService {
+  static Future<http.Response> updatePassword(Map<String,dynamic> formData) async {
     final http.Response response = await http.post(
-      Uri.parse(EndPoint.registration),
+      Uri.parse(EndPoint.updatePassword),
       headers: {'Content-Type': 'application/x-www-form-urlencoded'},
       body: formData,
     );
     return response;
   }
 
-  static Future<http.Response> getUserByID(Map<String,dynamic> formData) async {
+  static Future<http.Response> editProfile(Map<String,dynamic> formData) async {
     final http.Response response = await http.post(
-      Uri.parse(EndPoint.getUser),
+      Uri.parse(EndPoint.editProfile),
       headers: {'Content-Type': 'application/x-www-form-urlencoded'},
       body: formData,
     );
     return response;
   }
 
-  static Future<http.Response> login(Map<String,dynamic> formData) async {
+  static Future<http.Response> patientList(Map<String,dynamic> formData) async {
     final http.Response response = await http.post(
-      Uri.parse(EndPoint.login),
+      Uri.parse(EndPoint.patientList),
       headers: {'Content-Type': 'application/x-www-form-urlencoded'},
       body: formData,
     );
     return response;
   }
 
-  static Future<http.Response> forgotPassword(Map<String,dynamic> formData) async {
+  static Future<http.Response> changeDoctor(Map<String,dynamic> formData) async {
     final http.Response response = await http.post(
-      Uri.parse(EndPoint.forgotPassword),
+      Uri.parse(EndPoint.changeDoctor),
       headers: {'Content-Type': 'application/x-www-form-urlencoded'},
       body: formData,
     );

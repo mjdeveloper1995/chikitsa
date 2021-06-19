@@ -78,4 +78,6 @@ class StringConstant {
   static const String AskingforyourAppointment= "Asking for your Appointment";
   static const String ExtracommentsfromPatient = "Extra comments from Patient";
 
+  static String userId = '';
+
 }

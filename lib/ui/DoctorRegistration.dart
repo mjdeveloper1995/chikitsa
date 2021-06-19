@@ -1,6 +1,8 @@
 import 'dart:convert';
 
 import 'package:chikitsa/core/network/authentication.dart';
+import 'package:chikitsa/core/preference/pref_constant.dart';
+import 'package:chikitsa/core/preference/shared_preference.dart';
 import 'package:chikitsa/ui/DoctorHome.dart';
 import 'package:chikitsa/utils/AppColors.dart';
 import 'package:chikitsa/utils/InternetCheck.dart';
@@ -10,6 +12,7 @@ import 'package:chikitsa/utils/loading_widget.dart';
 import 'package:chikitsa/utils/screen.dart';
 import 'package:flutter/material.dart';
 import 'package:keyboard_visibility/keyboard_visibility.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class DoctorRegistration extends StatefulWidget {
   @override
@@ -551,13 +554,31 @@ class _DoctorRegistrationState extends State<DoctorRegistration> {
           final jsonData = json.decode(response.body);
           if (!jsonData.containsKey("data")) {
             showAlertDialog(context, jsonData["message"]);
-          } else
-            // Navigator.pushAndRemoveUntil(
-            //     context,
-            //     MaterialPageRoute(builder: (BuildContext context) => DoctorHome()),
-            //         (route) => false
-            // );
-            Navigator.pop(context);
+          } else {
+            final SharedPreferences preference =
+            await SharedPreferences.getInstance();
+            await SharedPreferenceHelper.setString(
+                preference, PrefConstant.type, jsonData['data']['type']);
+            await SharedPreferenceHelper.setString(
+                preference, PrefConstant.id, jsonData['data']['_id']);
+            await SharedPreferenceHelper.setString(
+                preference, PrefConstant.name, jsonData['data']['name']);
+            await SharedPreferenceHelper.setString(preference,
+                PrefConstant.hospital, jsonData['data']['hospital']);
+            await SharedPreferenceHelper.setString(preference,
+                PrefConstant.speciality, jsonData['data']['speciality']);
+            await SharedPreferenceHelper.setString(
+                preference, PrefConstant.email, jsonData['data']['email']);
+            await SharedPreferenceHelper.setString(
+                preference, PrefConstant.phone, jsonData['data']['phone']);
+            await SharedPreferenceHelper.setString(preference,
+                PrefConstant.patients, jsonData['patients'].length.toString());
+            Navigator.pushAndRemoveUntil(
+                context,
+                MaterialPageRoute(
+                    builder: (BuildContext context) => DoctorHome()),
+                (route) => false);
+          }
         } else
           showAlertDialog(context, response.body.toString());
       } else {

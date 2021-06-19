@@ -1,19 +1,16 @@
+import 'package:chikitsa/core/preference/pref_constant.dart';
+import 'package:chikitsa/core/preference/shared_preference.dart';
 import 'package:chikitsa/main.dart';
-import 'package:chikitsa/ui/AddMedicine.dart';
-import 'package:chikitsa/ui/AllMedications.dart';
 import 'package:chikitsa/ui/AllPatient.dart';
-import 'package:chikitsa/ui/Appointment.dart';
 import 'package:chikitsa/ui/AskingForAppointment.dart';
-import 'package:chikitsa/ui/ChangeDoctor.dart';
 import 'package:chikitsa/ui/DoctorProfile.dart';
-import 'package:chikitsa/ui/MissedMedicine.dart';
-import 'package:chikitsa/ui/Profile.dart';
 import 'package:chikitsa/utils/AppColors.dart';
 import 'package:chikitsa/utils/StringConstant.dart';
 import 'package:chikitsa/utils/screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class DoctorHome extends StatefulWidget {
   DoctorHome({Key key, this.title});
@@ -60,11 +57,7 @@ class _DoctorHomeState extends State<DoctorHome> {
             value: 2,
             child: GestureDetector(
               onTap: () {
-                Navigator.pop(context);
-                setState(() {
-                  Navigator.of(context).push(MaterialPageRoute(
-                      builder: (BuildContext context) => MyApp()));
-                });
+                logout();
               },
               child: Row(
                 children: <Widget>[
@@ -85,7 +78,44 @@ class _DoctorHomeState extends State<DoctorHome> {
     );
   }
 
+  Future<void> logout() async {
+    final SharedPreferences preference = await SharedPreferences.getInstance();
+    await SharedPreferenceHelper.setString(preference, PrefConstant.type, '');
+    await SharedPreferenceHelper.setString(preference, PrefConstant.id, '');
+    await SharedPreferenceHelper.setString(preference, PrefConstant.name, '');
+    await SharedPreferenceHelper.setString(
+        preference, PrefConstant.hospital, '');
+    await SharedPreferenceHelper.setString(
+        preference, PrefConstant.speciality, '');
+    await SharedPreferenceHelper.setString(preference, PrefConstant.email, '');
+    await SharedPreferenceHelper.setString(preference, PrefConstant.phone, '');
+    await SharedPreferenceHelper.setString(
+        preference, PrefConstant.patients, '0');
+    Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(builder: (BuildContext context) => LoginPage()),
+        (route) => false);
+  }
 
+  String name = '';
+  String id = '';
+  String noOfPatient = "0";
+
+  @override
+  void initState() {
+    super.initState();
+    getInitialData();
+  }
+
+  Future<void> getInitialData() async {
+    final SharedPreferences preference = await SharedPreferences.getInstance();
+    id = SharedPreferenceHelper.getPrefString(preference, PrefConstant.id);
+    name = SharedPreferenceHelper.getPrefString(preference, PrefConstant.name);
+    noOfPatient =
+        SharedPreferenceHelper.getPrefString(preference, PrefConstant.patients);
+    StringConstant.userId = id;
+    setState(() {});
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -149,7 +179,7 @@ class _DoctorHomeState extends State<DoctorHome> {
                             left: SizeConfig.blockSizeVertical * 2,
                           ),
                           child: Text(
-                            "Deepak Sharma",
+                            name,
                             textAlign: TextAlign.left,
                             style: TextStyle(
                                 letterSpacing: 1.0,
@@ -162,9 +192,11 @@ class _DoctorHomeState extends State<DoctorHome> {
                       ],
                     ),
                     GestureDetector(
-                      onTap: () {
-                        Navigator.of(context).push(MaterialPageRoute(
-                            builder: (BuildContext context) => DoctorProfile()));
+                      onTap: () async{
+                        await Navigator.of(context).push(MaterialPageRoute(
+                            builder: (BuildContext context) =>
+                                DoctorProfile()));
+                        getInitialData();
                       },
                       child: Container(
                         margin: EdgeInsets.only(
@@ -174,7 +206,8 @@ class _DoctorHomeState extends State<DoctorHome> {
                           borderRadius: new BorderRadius.circular(10.0),
                           child: Image(
                             fit: BoxFit.fill,
-                            image: AssetImage('assets/images/doctor_profile.png'),
+                            image:
+                                AssetImage('assets/images/doctor_profile.png'),
                             width: 40.0,
                             height: 40.0,
                           ),
@@ -190,7 +223,8 @@ class _DoctorHomeState extends State<DoctorHome> {
                     child: Column(
                       children: [
                         Container(
-                          margin: EdgeInsets.only(top: SizeConfig.blockSizeVertical * 6),
+                          margin: EdgeInsets.only(
+                              top: SizeConfig.blockSizeVertical * 6),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             crossAxisAlignment: CrossAxisAlignment.center,
@@ -198,20 +232,26 @@ class _DoctorHomeState extends State<DoctorHome> {
                               GestureDetector(
                                 onTap: () {
                                   Navigator.of(context).push(MaterialPageRoute(
-                                      builder: (BuildContext context) => AllPatient()));
+                                      builder: (BuildContext context) =>
+                                          AllPatient()));
                                 },
                                 child: Container(
-                                  margin: EdgeInsets.only(right: SizeConfig.blockSizeHorizontal *1),
+                                  margin: EdgeInsets.only(
+                                      right:
+                                          SizeConfig.blockSizeHorizontal * 1),
                                   width: SizeConfig.blockSizeHorizontal * 31,
                                   height: SizeConfig.blockSizeHorizontal * 28,
                                   child: Card(
                                       shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(10.0),
+                                        borderRadius:
+                                            BorderRadius.circular(10.0),
                                       ),
                                       color: AppColors.whiteColor,
                                       child: Column(
-                                        mainAxisAlignment: MainAxisAlignment.center,
-                                        crossAxisAlignment: CrossAxisAlignment.center,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
                                         children: [
                                           Image.asset(
                                             "assets/images/all_patient.png",
@@ -220,7 +260,9 @@ class _DoctorHomeState extends State<DoctorHome> {
                                           ),
                                           Container(
                                             margin: EdgeInsets.only(
-                                                top: SizeConfig.blockSizeVertical * 2),
+                                                top: SizeConfig
+                                                        .blockSizeVertical *
+                                                    2),
                                             child: Text(
                                               StringConstant.allpatient,
                                               textAlign: TextAlign.center,
@@ -236,7 +278,6 @@ class _DoctorHomeState extends State<DoctorHome> {
                                       )),
                                 ),
                               ),
-
                               GestureDetector(
                                 onTap: () {
                                   Navigator.of(context).push(MaterialPageRoute(
@@ -244,17 +285,21 @@ class _DoctorHomeState extends State<DoctorHome> {
                                           AskingForAppointment()));
                                 },
                                 child: Container(
-                                  margin: EdgeInsets.only(left: SizeConfig.blockSizeHorizontal *1),
+                                  margin: EdgeInsets.only(
+                                      left: SizeConfig.blockSizeHorizontal * 1),
                                   width: SizeConfig.blockSizeHorizontal * 31,
                                   height: SizeConfig.blockSizeHorizontal * 28,
                                   child: Card(
                                       shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(10.0),
+                                        borderRadius:
+                                            BorderRadius.circular(10.0),
                                       ),
                                       color: AppColors.whiteColor,
                                       child: Column(
-                                        mainAxisAlignment: MainAxisAlignment.center,
-                                        crossAxisAlignment: CrossAxisAlignment.center,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
                                         children: [
                                           Image.asset(
                                             "assets/images/doctor_appointment.png",
@@ -263,7 +308,9 @@ class _DoctorHomeState extends State<DoctorHome> {
                                           ),
                                           Container(
                                             margin: EdgeInsets.only(
-                                                top: SizeConfig.blockSizeVertical * 2),
+                                                top: SizeConfig
+                                                        .blockSizeVertical *
+                                                    2),
                                             child: Text(
                                               StringConstant.Appointment,
                                               textAlign: TextAlign.center,
@@ -304,14 +351,13 @@ class _DoctorHomeState extends State<DoctorHome> {
                                 right: SizeConfig.blockSizeHorizontal * 3),
                             width: MediaQuery.of(context).size.width,
                             height: SizeConfig.blockSizeHorizontal * 20,
-                            child:  Column(
+                            child: Column(
                               mainAxisAlignment: MainAxisAlignment.center,
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
                                 Container(
-
                                   child: Text(
-                                    "47",
+                                    noOfPatient,
                                     textAlign: TextAlign.center,
                                     style: TextStyle(
                                         color: Colors.black87,
@@ -321,7 +367,6 @@ class _DoctorHomeState extends State<DoctorHome> {
                                         letterSpacing: 1.0),
                                   ),
                                 ),
-
                                 Container(
                                   margin: EdgeInsets.only(
                                       top: SizeConfig.blockSizeVertical * 2),
@@ -342,15 +387,13 @@ class _DoctorHomeState extends State<DoctorHome> {
                         ),
                         Container(
                             child: Divider(
-                              color: Colors.black12,
-                              thickness: 1,
-                            )),
+                          color: Colors.black12,
+                          thickness: 1,
+                        )),
 
+                        // Quick View
 
-                   // Quick View
-
-
-                   /*     Container(
+                        /*     Container(
                           margin: EdgeInsets.only(
                             top: SizeConfig.blockSizeVertical * 1,
                             left: SizeConfig.blockSizeVertical * 3,
@@ -531,232 +574,8 @@ class _DoctorHomeState extends State<DoctorHome> {
                   ),
                 ),
               )
-
             ],
           )),
     );
-  }
-
-  getDrawer() {
-    return SafeArea(
-        child: Container(
-      color: AppColors.themecolor,
-      child: ListView(
-        // Important: Remove any padding from the ListView.
-        children: <Widget>[
-          SizedBox(
-            height: SizeConfig.blockSizeVertical * 20,
-          ),
-          ListTile(
-            leading: Image.asset(
-              "assets/images/notifications.png",
-              height: 25,
-              width: 25,
-            ),
-            title: Text(
-              StringConstant.Notifications,
-              textAlign: TextAlign.left,
-              style: TextStyle(
-                  letterSpacing: 1.0,
-                  color: Colors.white,
-                  fontSize: 18,
-                  fontWeight: FontWeight.normal,
-                  fontFamily: 'Montserrat-Bold'),
-            ),
-            onTap: () {
-              Navigator.pop(context);
-              setState(() {
-                /*  Navigator.of(context).push(MaterialPageRoute(
-                        builder: (BuildContext context) => mycart()));*/
-              });
-            },
-          ),
-          ListTile(
-            leading: Image.asset(
-              "assets/images/nearbyhospital.png",
-              height: 25,
-              width: 25,
-            ),
-            title: Text(
-              StringConstant.NearbyHospitals,
-              textAlign: TextAlign.left,
-              style: TextStyle(
-                  letterSpacing: 1.0,
-                  color: Colors.white,
-                  fontSize: 18,
-                  fontWeight: FontWeight.normal,
-                  fontFamily: 'Montserrat-Bold'),
-            ),
-            onTap: () {
-              Navigator.pop(context);
-              setState(() {
-                /*  Navigator.of(context).push(MaterialPageRoute(
-                        builder: (BuildContext context) => mycart()));*/
-              });
-            },
-          ),
-          ListTile(
-            leading: Image.asset(
-              "assets/images/appointment.png",
-              height: 25,
-              width: 25,
-            ),
-            title: Text(
-              StringConstant.Appointment,
-              textAlign: TextAlign.left,
-              style: TextStyle(
-                  letterSpacing: 1.0,
-                  color: Colors.white,
-                  fontSize: 18,
-                  fontWeight: FontWeight.normal,
-                  fontFamily: 'Montserrat-Bold'),
-            ),
-            onTap: () {
-              Navigator.pop(context);
-              setState(() {
-                Navigator.of(context).push(MaterialPageRoute(
-                    builder: (BuildContext context) => Appointment()));
-              });
-            },
-          ),
-          ListTile(
-            leading: Image.asset(
-              "assets/images/changedoctor.png",
-              height: 25,
-              width: 25,
-            ),
-            title: Text(
-              StringConstant.ChangeAddDoctor,
-              textAlign: TextAlign.left,
-              style: TextStyle(
-                  letterSpacing: 1.0,
-                  color: Colors.white,
-                  fontSize: 18,
-                  fontWeight: FontWeight.normal,
-                  fontFamily: 'Montserrat-Bold'),
-            ),
-            onTap: () {
-              Navigator.pop(context);
-              setState(() {
-                Navigator.of(context).push(MaterialPageRoute(
-                    builder: (BuildContext context) => ChangeDoctor()));
-              });
-            },
-          ),
-          ListTile(
-            leading: Image.asset(
-              "assets/images/covid.png",
-              height: 25,
-              width: 25,
-            ),
-            title: Text(
-              StringConstant.Covid19Advice,
-              textAlign: TextAlign.left,
-              style: TextStyle(
-                  letterSpacing: 1.0,
-                  color: Colors.white,
-                  fontSize: 18,
-                  fontWeight: FontWeight.normal,
-                  fontFamily: 'Montserrat-Bold'),
-            ),
-            onTap: () {
-              Navigator.pop(context);
-              setState(() {
-                /*  Navigator.of(context).push(MaterialPageRoute(
-                        builder: (BuildContext context) => mycart()));*/
-              });
-            },
-          ),
-          ListTile(
-            leading: Image.asset(
-              "assets/images/notes.png",
-              height: 25,
-              width: 25,
-            ),
-            title: Text(
-              StringConstant.Notes,
-              textAlign: TextAlign.left,
-              style: TextStyle(
-                  letterSpacing: 1.0,
-                  color: Colors.white,
-                  fontSize: 18,
-                  fontWeight: FontWeight.normal,
-                  fontFamily: 'Montserrat-Bold'),
-            ),
-            onTap: () {
-              Navigator.pop(context);
-              setState(() {
-                /*  Navigator.of(context).push(MaterialPageRoute(
-                        builder: (BuildContext context) => mycart()));*/
-              });
-            },
-          ),
-          ListTile(
-            leading: Image.asset(
-              "assets/images/logout.png",
-              height: 25,
-              width: 25,
-            ),
-            title: Text(
-              StringConstant.Logout,
-              textAlign: TextAlign.left,
-              style: TextStyle(
-                  letterSpacing: 1.0,
-                  color: Colors.white,
-                  fontSize: 18,
-                  fontWeight: FontWeight.normal,
-                  fontFamily: 'Montserrat-Bold'),
-            ),
-            onTap: () {
-              Navigator.pop(context);
-              setState(() {
-                Navigator.of(context).push(MaterialPageRoute(
-                    builder: (BuildContext context) => MyApp()));
-              });
-            },
-          )
-        ],
-      ),
-    ));
-  }
-
-  Widget myPopMenu() {
-    return PopupMenuButton(
-        onSelected: (value) {
-
-        },
-        itemBuilder: (context) => [
-          PopupMenuItem(
-              value: 1,
-              child: Row(
-                children: <Widget>[
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(2, 2, 8, 2),
-                    child:Image.asset(
-                      "assets/images/refresh.png",
-                      height: 20,
-                      width: 20,
-                    ),
-                  ),
-                  Text('REFRESH')
-                ],
-              )),
-          PopupMenuItem(
-              value: 2,
-              child: Row(
-                children: <Widget>[
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(2, 2, 8, 2),
-                    child: Image.asset(
-                      "assets/images/logout.png",
-                      height: 20,
-                      width: 20,
-                    ),
-                  ),
-                  Text('LOG OUT')
-                ],
-              )),
-
-        ]);
   }
 }

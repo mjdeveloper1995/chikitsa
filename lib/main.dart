@@ -87,6 +87,7 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   final TextEditingController passwordController = new TextEditingController();
   final TextEditingController mobileController = new TextEditingController();
+  final TextEditingController emailController = new TextEditingController();
   bool _showPassword = false;
   bool _isLoading = false;
 
@@ -121,313 +122,7 @@ class _LoginPageState extends State<LoginPage> {
                       child: Column(
                         children: [
                           InkWell(
-                            onTap: () {
-                              showDialog(
-                                  context: context,
-                                  builder: (BuildContext ct) {
-                                    return AlertDialog(
-                                      content: Stack(
-                                        overflow: Overflow.visible,
-                                        children: <Widget>[
-                                          Positioned(
-                                            left: 110.0,
-                                            top: -80.0,
-                                            child: InkResponse(
-                                                onTap: () {
-                                                  Navigator.of(context).pop();
-                                                },
-                                                child: Container(
-                                                  height: 40,
-                                                  width: 40,
-                                                  decoration: BoxDecoration(
-                                                    shape: BoxShape.circle,
-                                                    color: AppColors.themecolor,
-                                                    //this is the important line
-                                                  ),
-                                                  child: Icon(
-                                                    Icons.close,
-                                                    color: Colors.black87,
-                                                    size: 20,
-                                                  ),
-                                                )),
-                                          ),
-                                          Column(
-                                            mainAxisSize: MainAxisSize.min,
-                                            children: <Widget>[
-                                              Row(
-                                                children: [
-                                                  Container(
-                                                      width: SizeConfig
-                                                              .blockSizeHorizontal *
-                                                          14,
-                                                      height: SizeConfig
-                                                              .blockSizeVertical *
-                                                          8,
-                                                      margin: EdgeInsets.only(
-                                                        top: SizeConfig
-                                                                .blockSizeVertical *
-                                                            1,
-                                                      ),
-                                                      padding: EdgeInsets.only(
-                                                        left: SizeConfig
-                                                                .blockSizeVertical *
-                                                            1,
-                                                        right: SizeConfig
-                                                                .blockSizeVertical *
-                                                            1,
-                                                      ),
-                                                      alignment:
-                                                          Alignment.center,
-                                                      decoration: BoxDecoration(
-                                                        borderRadius:
-                                                            BorderRadius
-                                                                .circular(10),
-                                                        border: Border.all(
-                                                          color: Colors.black12,
-                                                          style:
-                                                              BorderStyle.solid,
-                                                          width: 1.0,
-                                                        ),
-                                                        color:
-                                                            Colors.transparent,
-                                                      ),
-                                                      child: Text(
-                                                        "+91",
-                                                        style: TextStyle(
-                                                          letterSpacing: 1.0,
-                                                          color: Colors.black87,
-                                                          fontWeight:
-                                                              FontWeight.bold,
-                                                          fontFamily:
-                                                              'Lato-Regular',
-                                                        ),
-                                                      )),
-                                                  Expanded(
-                                                    child: Container(
-                                                      width: double.infinity,
-                                                      margin: EdgeInsets.only(
-                                                          top: SizeConfig
-                                                                  .blockSizeVertical *
-                                                              1,
-                                                          left: SizeConfig
-                                                                  .blockSizeHorizontal *
-                                                              2),
-                                                      padding: EdgeInsets.only(
-                                                        left: SizeConfig
-                                                                .blockSizeVertical *
-                                                            1,
-                                                        right: SizeConfig
-                                                                .blockSizeVertical *
-                                                            1,
-                                                      ),
-                                                      alignment:
-                                                          Alignment.centerLeft,
-                                                      decoration: BoxDecoration(
-                                                        borderRadius:
-                                                            BorderRadius
-                                                                .circular(10),
-                                                        border: Border.all(
-                                                          color: Colors.black12,
-                                                          style:
-                                                              BorderStyle.solid,
-                                                          width: 1.0,
-                                                        ),
-                                                        color:
-                                                            Colors.transparent,
-                                                      ),
-                                                      child: TextField(
-                                                        controller:
-                                                            mobileController,
-                                                        textInputAction:
-                                                            TextInputAction
-                                                                .next,
-                                                        keyboardType:
-                                                            TextInputType.phone,
-                                                        decoration:
-                                                            InputDecoration(
-                                                          border:
-                                                              InputBorder.none,
-                                                          prefixIcon: Icon(
-                                                            Icons
-                                                                .phone_android_sharp,
-                                                            color: Colors.black,
-                                                            size: 25,
-                                                          ),
-                                                          focusedBorder:
-                                                              InputBorder.none,
-                                                          hintStyle: TextStyle(
-                                                            fontSize: 12.0,
-                                                            color: AppColors
-                                                                .blackColor,
-                                                            fontFamily:
-                                                                "Montserrat-Regular",
-                                                            fontStyle: FontStyle
-                                                                .normal,
-                                                            decoration:
-                                                                TextDecoration
-                                                                    .none,
-                                                          ),
-                                                          hintText:
-                                                              StringConstant
-                                                                  .mobilenumber,
-                                                        ),
-                                                      ),
-                                                    ),
-                                                  )
-                                                ],
-                                              ),
-                                              Container(
-                                                width: MediaQuery.of(context)
-                                                    .size
-                                                    .width,
-                                                margin: EdgeInsets.only(
-                                                  top: SizeConfig
-                                                          .blockSizeVertical *
-                                                      1,
-                                                ),
-                                                padding: EdgeInsets.only(
-                                                  left: SizeConfig
-                                                          .blockSizeVertical *
-                                                      1,
-                                                  right: SizeConfig
-                                                          .blockSizeVertical *
-                                                      1,
-                                                ),
-                                                alignment: Alignment.topLeft,
-                                                decoration: BoxDecoration(
-                                                  borderRadius:
-                                                      BorderRadius.circular(10),
-                                                  border: Border.all(
-                                                    color: Colors.black12,
-                                                    style: BorderStyle.solid,
-                                                    width: 1.0,
-                                                  ),
-                                                  color: Colors.transparent,
-                                                ),
-                                                child: TextField(
-                                                  controller:
-                                                      passwordController,
-                                                  textInputAction:
-                                                      TextInputAction.done,
-                                                  obscureText:
-                                                      !this._showPassword,
-                                                  textAlign: TextAlign.left,
-                                                  style: TextStyle(
-                                                    letterSpacing: 1.0,
-                                                    color: AppColors.blackColor,
-                                                    fontWeight:
-                                                        FontWeight.normal,
-                                                    fontFamily:
-                                                        'Montserrat-Regular',
-                                                  ),
-                                                  decoration: InputDecoration(
-                                                    prefixIcon: Icon(
-                                                      Icons.vpn_key,
-                                                      color: Colors.black,
-                                                      size: 25,
-                                                    ),
-                                                    border: InputBorder.none,
-                                                    focusedBorder:
-                                                        InputBorder.none,
-                                                    hintStyle: TextStyle(
-                                                      fontSize: 12.0,
-                                                      color:
-                                                          AppColors.blackColor,
-                                                      fontFamily:
-                                                          "Montserrat-Regular",
-                                                      fontStyle:
-                                                          FontStyle.normal,
-                                                      decoration:
-                                                          TextDecoration.none,
-                                                    ),
-                                                    hintText:
-                                                        StringConstant.password,
-                                                  ),
-                                                ),
-                                              ),
-                                              Container(
-                                                  alignment:
-                                                      Alignment.centerRight,
-                                                  margin: EdgeInsets.only(
-                                                    top: SizeConfig
-                                                            .blockSizeVertical *
-                                                        1,
-                                                  ),
-                                                  child: GestureDetector(
-                                                    child: Text(
-                                                      "Forgot Password?",
-                                                      textAlign:
-                                                          TextAlign.center,
-                                                      style: TextStyle(
-                                                          decoration:
-                                                              TextDecoration
-                                                                  .none,
-                                                          fontSize: 12.0,
-                                                          color: AppColors
-                                                              .blackColor,
-                                                          fontFamily:
-                                                              "Montserrat-Regular",
-                                                          fontStyle:
-                                                              FontStyle.normal),
-                                                    ),
-                                                    onTap: () {},
-                                                  )),
-                                              GestureDetector(
-                                                onTap: () {
-                                                  Navigator.of(context).pop();
-                                                  onSubmit(context);
-                                                },
-                                                child: Container(
-                                                  margin: EdgeInsets.only(
-                                                    top: SizeConfig
-                                                            .blockSizeVertical *
-                                                        1,
-                                                  ),
-                                                  width: SizeConfig
-                                                          .blockSizeHorizontal *
-                                                      60,
-                                                  height: SizeConfig
-                                                          .blockSizeHorizontal *
-                                                      15,
-                                                  child: Card(
-                                                      shape:
-                                                          RoundedRectangleBorder(
-                                                        borderRadius:
-                                                            BorderRadius
-                                                                .circular(10.0),
-                                                      ),
-                                                      color:
-                                                          AppColors.themecolor,
-                                                      child: Container(
-                                                        alignment:
-                                                            Alignment.center,
-                                                        child: Text(
-                                                          StringConstant.signin
-                                                              .toUpperCase(),
-                                                          textAlign:
-                                                              TextAlign.center,
-                                                          style: TextStyle(
-                                                              color:
-                                                                  Colors.white,
-                                                              fontFamily:
-                                                                  'Lato-Regular',
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .normal,
-                                                              fontSize: 16,
-                                                              letterSpacing:
-                                                                  1.0),
-                                                        ),
-                                                      )),
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ],
-                                      ),
-                                    );
-                                  });
-                            },
+                            onTap: showLoginPopup,
                             child: Container(
                               width: SizeConfig.blockSizeHorizontal * 60,
                               height: SizeConfig.blockSizeHorizontal * 15,
@@ -598,6 +293,372 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
+  void showLoginPopup() {
+    showDialog(
+        context: context,
+        builder: (BuildContext ct) {
+          return AlertDialog(
+            content: Stack(
+              overflow: Overflow.visible,
+              children: <Widget>[
+                Positioned(
+                  left: 110.0,
+                  top: -80.0,
+                  child: InkResponse(
+                      onTap: () {
+                        Navigator.of(context).pop();
+                      },
+                      child: Container(
+                        height: 40,
+                        width: 40,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: AppColors.themecolor,
+                          //this is the important line
+                        ),
+                        child: Icon(
+                          Icons.close,
+                          color: Colors.black87,
+                          size: 20,
+                        ),
+                      )),
+                ),
+                Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    Row(
+                      children: [
+                        Container(
+                            width: SizeConfig.blockSizeHorizontal * 14,
+                            height: SizeConfig.blockSizeVertical * 8,
+                            margin: EdgeInsets.only(
+                              top: SizeConfig.blockSizeVertical * 1,
+                            ),
+                            padding: EdgeInsets.only(
+                              left: SizeConfig.blockSizeVertical * 1,
+                              right: SizeConfig.blockSizeVertical * 1,
+                            ),
+                            alignment: Alignment.center,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10),
+                              border: Border.all(
+                                color: Colors.black12,
+                                style: BorderStyle.solid,
+                                width: 1.0,
+                              ),
+                              color: Colors.transparent,
+                            ),
+                            child: Text(
+                              "+91",
+                              style: TextStyle(
+                                letterSpacing: 1.0,
+                                color: Colors.black87,
+                                fontWeight: FontWeight.bold,
+                                fontFamily: 'Lato-Regular',
+                              ),
+                            )),
+                        Expanded(
+                          child: Container(
+                            width: double.infinity,
+                            margin: EdgeInsets.only(
+                                top: SizeConfig.blockSizeVertical * 1,
+                                left: SizeConfig.blockSizeHorizontal * 2),
+                            padding: EdgeInsets.only(
+                              left: SizeConfig.blockSizeVertical * 1,
+                              right: SizeConfig.blockSizeVertical * 1,
+                            ),
+                            alignment: Alignment.centerLeft,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10),
+                              border: Border.all(
+                                color: Colors.black12,
+                                style: BorderStyle.solid,
+                                width: 1.0,
+                              ),
+                              color: Colors.transparent,
+                            ),
+                            child: TextField(
+                              controller: mobileController,
+                              textInputAction: TextInputAction.next,
+                              keyboardType: TextInputType.phone,
+                              decoration: InputDecoration(
+                                border: InputBorder.none,
+                                prefixIcon: Icon(
+                                  Icons.phone_android_sharp,
+                                  color: Colors.black,
+                                  size: 25,
+                                ),
+                                focusedBorder: InputBorder.none,
+                                hintStyle: TextStyle(
+                                  fontSize: 12.0,
+                                  color: AppColors.blackColor,
+                                  fontFamily: "Montserrat-Regular",
+                                  fontStyle: FontStyle.normal,
+                                  decoration: TextDecoration.none,
+                                ),
+                                hintText: StringConstant.mobilenumber,
+                              ),
+                            ),
+                          ),
+                        )
+                      ],
+                    ),
+                    Container(
+                      width: MediaQuery.of(context).size.width,
+                      margin: EdgeInsets.only(
+                        top: SizeConfig.blockSizeVertical * 1,
+                      ),
+                      padding: EdgeInsets.only(
+                        left: SizeConfig.blockSizeVertical * 1,
+                        right: SizeConfig.blockSizeVertical * 1,
+                      ),
+                      alignment: Alignment.topLeft,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                        border: Border.all(
+                          color: Colors.black12,
+                          style: BorderStyle.solid,
+                          width: 1.0,
+                        ),
+                        color: Colors.transparent,
+                      ),
+                      child: TextField(
+                        controller: passwordController,
+                        textInputAction: TextInputAction.done,
+                        obscureText: !this._showPassword,
+                        textAlign: TextAlign.left,
+                        style: TextStyle(
+                          letterSpacing: 1.0,
+                          color: AppColors.blackColor,
+                          fontWeight: FontWeight.normal,
+                          fontFamily: 'Montserrat-Regular',
+                        ),
+                        decoration: InputDecoration(
+                          prefixIcon: Icon(
+                            Icons.vpn_key,
+                            color: Colors.black,
+                            size: 25,
+                          ),
+                          border: InputBorder.none,
+                          focusedBorder: InputBorder.none,
+                          hintStyle: TextStyle(
+                            fontSize: 12.0,
+                            color: AppColors.blackColor,
+                            fontFamily: "Montserrat-Regular",
+                            fontStyle: FontStyle.normal,
+                            decoration: TextDecoration.none,
+                          ),
+                          hintText: StringConstant.password,
+                        ),
+                      ),
+                    ),
+                    Container(
+                        alignment: Alignment.centerRight,
+                        margin: EdgeInsets.only(
+                          top: SizeConfig.blockSizeVertical * 1,
+                        ),
+                        child: GestureDetector(
+                          child: Text(
+                            "Forgot Password?",
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                                decoration: TextDecoration.none,
+                                fontSize: 12.0,
+                                color: AppColors.blackColor,
+                                fontFamily: "Montserrat-Regular",
+                                fontStyle: FontStyle.normal),
+                          ),
+                          onTap: () {
+                            Navigator.of(context).pop();
+                            showForgotPopup();
+                          },
+                        )),
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.of(context).pop();
+                        onSubmit(context);
+                      },
+                      child: Container(
+                        margin: EdgeInsets.only(
+                          top: SizeConfig.blockSizeVertical * 1,
+                        ),
+                        width: SizeConfig.blockSizeHorizontal * 60,
+                        height: SizeConfig.blockSizeHorizontal * 15,
+                        child: Card(
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10.0),
+                            ),
+                            color: AppColors.themecolor,
+                            child: Container(
+                              alignment: Alignment.center,
+                              child: Text(
+                                StringConstant.signin.toUpperCase(),
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontFamily: 'Lato-Regular',
+                                    fontWeight: FontWeight.normal,
+                                    fontSize: 16,
+                                    letterSpacing: 1.0),
+                              ),
+                            )),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          );
+        });
+  }
+
+  void showForgotPopup() {
+    showDialog(
+        context: context,
+        builder: (BuildContext ct) {
+          return AlertDialog(
+            content: Stack(
+              overflow: Overflow.visible,
+              children: <Widget>[
+                Positioned(
+                  left: 110.0,
+                  top: -80.0,
+                  child: InkResponse(
+                      onTap: () {
+                        Navigator.of(context).pop();
+                      },
+                      child: Container(
+                        height: 40,
+                        width: 40,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: AppColors.themecolor,
+                          //this is the important line
+                        ),
+                        child: Icon(
+                          Icons.close,
+                          color: Colors.black87,
+                          size: 20,
+                        ),
+                      )),
+                ),
+                Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    Container(
+                      width: double.infinity,
+                      margin: EdgeInsets.only(
+                          top: SizeConfig.blockSizeVertical * 1,
+                          left: SizeConfig.blockSizeHorizontal * 2),
+                      padding: EdgeInsets.only(
+                        left: SizeConfig.blockSizeVertical * 1,
+                        right: SizeConfig.blockSizeVertical * 1,
+                      ),
+                      alignment: Alignment.centerLeft,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                        border: Border.all(
+                          color: Colors.black12,
+                          style: BorderStyle.solid,
+                          width: 1.0,
+                        ),
+                        color: Colors.transparent,
+                      ),
+                      child: TextField(
+                        controller: emailController,
+                        decoration: InputDecoration(
+                          border: InputBorder.none,
+                          focusedBorder: InputBorder.none,
+                          hintStyle: TextStyle(
+                            fontSize: 12.0,
+                            color: AppColors.blackColor,
+                            fontFamily: "Montserrat-Regular",
+                            fontStyle: FontStyle.normal,
+                            decoration: TextDecoration.none,
+                          ),
+                          hintText: 'Enter email to get password',
+                        ),
+                      ),
+                    ),
+                    GestureDetector(
+                      onTap: () {
+                        if (emailController.text.isEmpty) {
+                          return;
+                        }
+
+                        Navigator.of(context).pop();
+                        forgotSubmit();
+                      },
+                      child: Container(
+                        margin: EdgeInsets.only(
+                          top: SizeConfig.blockSizeVertical * 1,
+                        ),
+                        width: SizeConfig.blockSizeHorizontal * 60,
+                        height: SizeConfig.blockSizeHorizontal * 15,
+                        child: Card(
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10.0),
+                            ),
+                            color: AppColors.themecolor,
+                            child: Container(
+                              alignment: Alignment.center,
+                              child: Text(
+                                'Forgot',
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontFamily: 'Lato-Regular',
+                                    fontWeight: FontWeight.normal,
+                                    fontSize: 16,
+                                    letterSpacing: 1.0),
+                              ),
+                            )),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          );
+        });
+  }
+
+  Future<void> forgotSubmit() async {
+    if (!await (InternetCheck().check())) {
+      showAlertDialog(context, 'No internet connection available');
+      return;
+    }
+
+    try {
+      setState(() {
+        _isLoading = true;
+      });
+
+      final formData = new Map<String, dynamic>();
+      formData['email'] = emailController.text.trim();
+
+      final response = await AuthenticationService.forgotPassword(formData);
+      setState(() {
+        _isLoading = false;
+      });
+
+      if (response.statusCode == 200){
+        final jsonData = json.decode(response.body);
+        showAlertDialog(context, jsonData["message"]);
+      }
+      else {
+        showAlertDialog(context, response.body.toString());
+      }
+
+    }catch (error) {
+      setState(() {
+        _isLoading = false;
+      });
+      showAlertDialog(context, error.toString());
+    }
+
+  }
+
   Future<void> onSubmit(BuildContext context) async {
     if (!await (InternetCheck().check())) {
       showAlertDialog(context, 'No internet connection available');
@@ -644,7 +705,7 @@ class _LoginPageState extends State<LoginPage> {
             await SharedPreferenceHelper.setString(
                 preference, PrefConstant.address, jsonData['data']['address']);
             await SharedPreferenceHelper.setString(
-                preference, PrefConstant.age, jsonData['data']['age']);
+                preference, PrefConstant.age, jsonData['data']['age'].toString());
             await SharedPreferenceHelper.setString(
                 preference, PrefConstant.email, jsonData['data']['email']);
             await SharedPreferenceHelper.setString(
@@ -652,15 +713,17 @@ class _LoginPageState extends State<LoginPage> {
 
             if (jsonData['doctor'] != null) {
               await SharedPreferenceHelper.setString(preference,
-                  PrefConstant.doctorId, jsonData['doctor']['phone']);
+                  PrefConstant.doctorId, jsonData['doctor']['_id']);
               await SharedPreferenceHelper.setString(preference,
-                  PrefConstant.doctorName, jsonData['doctor']['phone']);
+                  PrefConstant.doctorName, jsonData['doctor']['name']);
               await SharedPreferenceHelper.setString(preference,
                   PrefConstant.doctorPhone, jsonData['doctor']['phone']);
               await SharedPreferenceHelper.setString(preference,
-                  PrefConstant.doctorHospital, jsonData['doctor']['phone']);
-              await SharedPreferenceHelper.setString(preference,
-                  PrefConstant.doctorSpeciality, jsonData['doctor']['phone']);
+                  PrefConstant.doctorHospital, jsonData['doctor']['hospital']);
+              await SharedPreferenceHelper.setString(
+                  preference,
+                  PrefConstant.doctorSpeciality,
+                  jsonData['doctor']['speciality']);
             }
             Navigator.pushAndRemoveUntil(
                 context,

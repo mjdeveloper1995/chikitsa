@@ -1,6 +1,8 @@
 import 'dart:convert';
 
 import 'package:chikitsa/core/network/authentication.dart';
+import 'package:chikitsa/core/preference/pref_constant.dart';
+import 'package:chikitsa/core/preference/shared_preference.dart';
 import 'package:chikitsa/ui/Home.dart';
 import 'package:chikitsa/utils/AppColors.dart';
 import 'package:chikitsa/utils/InternetCheck.dart';
@@ -11,6 +13,7 @@ import 'package:chikitsa/utils/screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_switch/flutter_switch.dart';
 import 'package:keyboard_visibility/keyboard_visibility.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class PatientRegistration extends StatefulWidget {
   @override
@@ -616,7 +619,6 @@ class _PatientRegistrationState extends State<PatientRegistration> {
                           color: Colors.transparent,
                         ),
                         child: TextField(
-
                           controller: drMobileController,
                           textInputAction: TextInputAction.next,
                           keyboardType: TextInputType.phone,
@@ -627,10 +629,10 @@ class _PatientRegistrationState extends State<PatientRegistration> {
                             fontWeight: FontWeight.normal,
                             fontFamily: 'Montserrat-Regular',
                           ),
-                          onChanged: (text){
-                            if(text.trim().length == 10){
-                              doctorData(text.trim(),context);
-                            }else{
+                          onChanged: (text) {
+                            if (text.trim().length == 10) {
+                              doctorData(text.trim(), context);
+                            } else {
                               doctorNameController.text = '';
                             }
                           },
@@ -785,7 +787,7 @@ class _PatientRegistrationState extends State<PatientRegistration> {
       formData['email'] = emailController.text.trim();
       formData['name'] = nameController.text.trim();
       formData['address'] = addressController.text.trim();
-      formData['age'] =  ageController.text.trim();
+      formData['age'] = ageController.text.trim();
       formData['phone'] = mobileController.text.trim();
       formData['password'] = passwordController.text.trim();
       formData['type'] = 'Patient';
@@ -806,12 +808,43 @@ class _PatientRegistrationState extends State<PatientRegistration> {
         final jsonData = json.decode(response.body);
         if (!jsonData.containsKey("data")) {
           showAlertDialog(context, jsonData["message"]);
-        } else
-          // Navigator.pushAndRemoveUntil(
-          //     context,
-          //     MaterialPageRoute(builder: (BuildContext context) => Home()),
-          //     (route) => false);
-    Navigator.pop(context);
+        } else {
+          final SharedPreferences preference =
+              await SharedPreferences.getInstance();
+
+          await SharedPreferenceHelper.setString(
+              preference, PrefConstant.type, jsonData['data']['type']);
+          await SharedPreferenceHelper.setString(
+              preference, PrefConstant.id, jsonData['data']['_id']);
+          await SharedPreferenceHelper.setString(
+              preference, PrefConstant.name, jsonData['data']['name']);
+          await SharedPreferenceHelper.setString(
+              preference, PrefConstant.address, jsonData['data']['address']);
+          await SharedPreferenceHelper.setString(
+              preference, PrefConstant.age, jsonData['data']['age'].toString());
+          await SharedPreferenceHelper.setString(
+              preference, PrefConstant.email, jsonData['data']['email']);
+          await SharedPreferenceHelper.setString(
+              preference, PrefConstant.phone, jsonData['data']['phone']);
+          if (jsonData['doctor'] != null) {
+            await SharedPreferenceHelper.setString(
+                preference, PrefConstant.doctorId, jsonData['doctor']['_id']);
+            await SharedPreferenceHelper.setString(preference,
+                PrefConstant.doctorName, jsonData['doctor']['name']);
+            await SharedPreferenceHelper.setString(preference,
+                PrefConstant.doctorPhone, jsonData['doctor']['phone']);
+            await SharedPreferenceHelper.setString(preference,
+                PrefConstant.doctorHospital, jsonData['doctor']['hospital']);
+            await SharedPreferenceHelper.setString(
+                preference,
+                PrefConstant.doctorSpeciality,
+                jsonData['doctor']['speciality']);
+          }
+          Navigator.pushAndRemoveUntil(
+              context,
+              MaterialPageRoute(builder: (BuildContext context) => Home()),
+              (route) => false);
+        }
       } else {
         showAlertDialog(context, response.body.toString());
       }
@@ -854,12 +887,12 @@ class _PatientRegistrationState extends State<PatientRegistration> {
     if (nameController.text.isEmpty) {
       return 'Name should not empty';
     } else if (ageController.text.isEmpty) {
-      return 'Speciality should not empty';
+      return 'age should not empty';
     } else if (mobileController.text.isEmpty) {
       return 'Mobile number should not empty';
     } else if (mobileController.text.length != 10) {
       return 'Mobile number is not correct';
-    }  else if (passwordController.text.isEmpty) {
+    } else if (passwordController.text.isEmpty) {
       return 'Password should not be empty';
     } else if (confirmPasswordController.text.isEmpty) {
       return 'Confirm password should not be empty';
@@ -878,7 +911,7 @@ class _PatientRegistrationState extends State<PatientRegistration> {
     return true;
   }
 
-  Future<void> doctorData(String contactNumber,BuildContext context) async {
+  Future<void> doctorData(String contactNumber, BuildContext context) async {
     if (!await (InternetCheck().check())) {
       showAlertDialog(context, 'No internet connection available');
       return;

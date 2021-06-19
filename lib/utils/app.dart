@@ -60,7 +60,7 @@ createUpperBar(context,text) {
     );
 }
 
-createProfileUpperBar(context,text) {
+createProfileUpperBar(context,text,{Function onClick}) {
   return
     Container(
       color: AppColors.themecolor,
@@ -108,9 +108,7 @@ createProfileUpperBar(context,text) {
                   height: 20,
                   width: 20,
                 ),
-                onPressed: () {
-                  Navigator.pop(context, true);
-                }),
+                onPressed: onClick),
           ),
         ],
       ),

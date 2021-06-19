@@ -1,19 +1,22 @@
+import 'package:chikitsa/core/preference/pref_constant.dart';
+import 'package:chikitsa/core/preference/shared_preference.dart';
 import 'package:chikitsa/main.dart';
-import 'package:chikitsa/ui/AddMedicine.dart';
 import 'package:chikitsa/ui/AddSchedule.dart';
 import 'package:chikitsa/ui/AllMedications.dart';
-import 'package:chikitsa/ui/Appointment.dart';
 import 'package:chikitsa/ui/ChangeDoctor.dart';
 import 'package:chikitsa/ui/MissedMedicine.dart';
 import 'package:chikitsa/ui/Notifications.dart';
 import 'package:chikitsa/ui/PatientAppointment.dart';
 import 'package:chikitsa/ui/Profile.dart';
+import 'package:chikitsa/ui/covid_screen.dart';
 import 'package:chikitsa/utils/AppColors.dart';
 import 'package:chikitsa/utils/StringConstant.dart';
 import 'package:chikitsa/utils/screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class Home extends StatefulWidget {
   Home({Key key, this.title});
@@ -66,6 +69,28 @@ class _HomeState extends State<Home> {
   bool G = false;
   bool IU = false;
   bool MCG = false;
+
+  String id = '';
+  String name = '';
+  String doctorMobile = '';
+  String doctorName = '';
+
+  @override
+  void initState() {
+    super.initState();
+    getInitialData();
+  }
+
+  Future<void> getInitialData() async {
+    final SharedPreferences preference = await SharedPreferences.getInstance();
+    id = SharedPreferenceHelper.getPrefString(preference, PrefConstant.id);
+    name = SharedPreferenceHelper.getPrefString(preference, PrefConstant.name);
+    doctorMobile = SharedPreferenceHelper.getPrefString(preference, PrefConstant.doctorPhone);
+    doctorName = SharedPreferenceHelper.getPrefString(preference, PrefConstant.doctorName);
+
+    StringConstant.userId = id;
+    setState(() {});
+  }
 
   void _modalBottomSheetMenu() {
     showModalBottomSheet(
@@ -588,7 +613,7 @@ class _HomeState extends State<Home> {
                             left: SizeConfig.blockSizeVertical * 2,
                           ),
                           child: Text(
-                            StringConstant.adminname,
+                            name,
                             textAlign: TextAlign.left,
                             style: TextStyle(
                                 letterSpacing: 1.0,
@@ -601,9 +626,10 @@ class _HomeState extends State<Home> {
                       ],
                     ),
                     GestureDetector(
-                      onTap: () {
-                        Navigator.of(context).push(MaterialPageRoute(
+                      onTap: () async{
+                       await Navigator.of(context).push(MaterialPageRoute(
                             builder: (BuildContext context) => Profile()));
+                       getInitialData();
                       },
                       child: Container(
                         margin: EdgeInsets.only(
@@ -805,7 +831,7 @@ class _HomeState extends State<Home> {
                                     right: SizeConfig.blockSizeHorizontal * 3,
                                     top: SizeConfig.blockSizeVertical * 3),
                                 child: Text(
-                                  ": Smita Kaushik",
+                                  ": $doctorName",
                                   textAlign: TextAlign.center,
                                   style: TextStyle(
                                       color: Colors.black87,
@@ -835,14 +861,22 @@ class _HomeState extends State<Home> {
                                       letterSpacing: 1.0),
                                 ),
                               ),
-                              Container(
-                                margin: EdgeInsets.only(
-                                    top: SizeConfig.blockSizeVertical * 3,
-                                ),
-                                child: Image.asset(
-                                  "assets/images/phone.png",
-                                  height: 30,
-                                  width: 30,
+                              GestureDetector(
+                                onTap: (){
+                                  if(doctorMobile == '')
+                                    return;
+                                  launch(
+                                      'tel://${doctorMobile ?? ''}');
+                                },
+                                child: Container(
+                                  margin: EdgeInsets.only(
+                                      top: SizeConfig.blockSizeVertical * 3,
+                                  ),
+                                  child: Image.asset(
+                                    "assets/images/phone.png",
+                                    height: 30,
+                                    width: 30,
+                                  ),
                                 ),
                               ),
                               Container(
@@ -850,7 +884,7 @@ class _HomeState extends State<Home> {
                                     top: SizeConfig.blockSizeVertical * 3,
                                     right: SizeConfig.blockSizeHorizontal * 3),
                                 child: Text(
-                                  ": 8058224670",
+                                  ": $doctorMobile",
                                   textAlign: TextAlign.center,
                                   style: TextStyle(
                                       color: Colors.black87,
@@ -1234,9 +1268,14 @@ class _HomeState extends State<Home> {
             ),
             onTap: () {
               Navigator.pop(context);
-              setState(() {
-                /*  Navigator.of(context).push(MaterialPageRoute(
-                        builder: (BuildContext context) => mycart()));*/
+              setState(() async{
+                const String url =
+                    'https://www.google.co.in/maps/search/nearby+hospitals';
+                if (await canLaunch(url))
+                await launch(url);
+                else
+                // can't launch url, there is some error
+                throw 'Could not launch $url';
               });
             },
           ),
@@ -1282,9 +1321,10 @@ class _HomeState extends State<Home> {
             ),
             onTap: () {
               Navigator.pop(context);
-              setState(() {
-                Navigator.of(context).push(MaterialPageRoute(
+              setState(() async{
+               await Navigator.of(context).push(MaterialPageRoute(
                     builder: (BuildContext context) => ChangeDoctor()));
+               getInitialData();
               });
             },
           ),
@@ -1306,9 +1346,10 @@ class _HomeState extends State<Home> {
             ),
             onTap: () {
               Navigator.pop(context);
-              setState(() {
-                /*  Navigator.of(context).push(MaterialPageRoute(
-                        builder: (BuildContext context) => mycart()));*/
+              setState(() async{
+                 await Navigator.of(context).push(MaterialPageRoute(
+                        builder: (BuildContext context) => CovidScreen()));
+                  SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
               });
             },
           ),

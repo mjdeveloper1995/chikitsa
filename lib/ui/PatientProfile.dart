@@ -1,8 +1,6 @@
 import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:chikitsa/core/preference/pref_constant.dart';
-import 'package:chikitsa/core/preference/shared_preference.dart';
 import 'package:chikitsa/ui/EditPassword.dart';
 import 'package:chikitsa/ui/EditProfile.dart';
 import 'package:chikitsa/ui/Home.dart';
@@ -15,14 +13,22 @@ import 'package:flutter/material.dart';
 import 'package:flutter_switch/flutter_switch.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
-class Profile extends StatefulWidget {
+class PatientProfile extends StatefulWidget {
+  final String name;
+  final String address;
+  final String age;
+  final String mobile;
+  final String email;
+
+  const PatientProfile(
+      {this.name, this.address, this.age, this.mobile, this.email});
+
   @override
-  _ProfileState createState() => _ProfileState();
+  _PatientProfileState createState() => _PatientProfileState();
 }
 
-class _ProfileState extends State<Profile> {
+class _PatientProfileState extends State<PatientProfile> {
   final _formKey = GlobalKey<FormState>();
   String imageUrl = "image";
   File _imageFile;
@@ -43,30 +49,6 @@ class _ProfileState extends State<Profile> {
     } catch (e) {
       print(e);
     }
-  }
-
-
-  String name = '';
-  String address = '';
-  String age = '';
-  String mobile = '';
-  String email = '';
-
-
-  @override
-  void initState() {
-    super.initState();
-    getInitialData();
-  }
-
-  Future<void> getInitialData() async {
-    final SharedPreferences preference = await SharedPreferences.getInstance();
-    name = SharedPreferenceHelper.getPrefString(preference, PrefConstant.name);
-    address = SharedPreferenceHelper.getPrefString(preference, PrefConstant.address);
-    age = SharedPreferenceHelper.getPrefString(preference, PrefConstant.age);
-    mobile = SharedPreferenceHelper.getPrefString(preference, PrefConstant.phone);
-    email = SharedPreferenceHelper.getPrefString(preference, PrefConstant.email);
-    setState(() {});
   }
 
   @override
@@ -92,53 +74,34 @@ class _ProfileState extends State<Profile> {
                           bottom: SizeConfig.blockSizeVertical * 1),
                       child: Column(
                         children: [
-                          image_value == false ?
-                          Container(
-                            margin: EdgeInsets.only(
-                                top: SizeConfig.blockSizeVertical * 2),
-                            alignment: Alignment.center,
-                            width: 120.0,
-                            height: 120.0,
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              image: DecorationImage(
-                                  fit: BoxFit.fill,
-                                  image: _imageFile != null ? FileImage(_imageFile) :
-                                  AssetImage("assets/images/dummy.png")
-                              ),
-                            ),
-                          ) : Container(
-                              width: 120.0,
-                              height: 120.0,
-                              child: ClipOval(
-                                child: CachedNetworkImage(
-                                  fit: BoxFit.fill,
-                                  imageUrl: image,
-                                  placeholder: (context, url) => CircularProgressIndicator(),
-                                ),
-                              )
-                          ),
-
-                          GestureDetector(
-                            onTap: ()
-                            {
-                              //showAlert();
-                            },
-                            child: Container(
-                              margin: EdgeInsets.only(
-                                  top: SizeConfig.blockSizeVertical * 1),
-                              alignment: Alignment.topCenter,
-                              child: Text(
-                                StringConstant.CHANGEPROFILEPHOTO,
-                                style: TextStyle(
-                                    letterSpacing: 1.0,
-                                    fontWeight: FontWeight.bold,
-                                    fontFamily: 'Lato-Bold',
-                                    color: AppColors.themecolor,
-                                    fontSize: 18),
-                              ),
-                            ),
-                          ),
+                          image_value == false
+                              ? Container(
+                                  margin: EdgeInsets.only(
+                                      top: SizeConfig.blockSizeVertical * 2),
+                                  alignment: Alignment.center,
+                                  width: 120.0,
+                                  height: 120.0,
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    image: DecorationImage(
+                                        fit: BoxFit.fill,
+                                        image: _imageFile != null
+                                            ? FileImage(_imageFile)
+                                            : AssetImage(
+                                                "assets/images/dummy.png")),
+                                  ),
+                                )
+                              : Container(
+                                  width: 120.0,
+                                  height: 120.0,
+                                  child: ClipOval(
+                                    child: CachedNetworkImage(
+                                      fit: BoxFit.fill,
+                                      imageUrl: image,
+                                      placeholder: (context, url) =>
+                                          CircularProgressIndicator(),
+                                    ),
+                                  )),
                           Row(
                             children: [
                               Container(
@@ -158,30 +121,11 @@ class _ProfileState extends State<Profile> {
                                       fontSize: 20),
                                 ),
                               ),
-                              GestureDetector(
-                                onTap:() async{
-                                  await Navigator.of(context).push(MaterialPageRoute(
-                                      builder: (BuildContext context) =>
-                                          EditProfile()));
-                                  getInitialData();
-                                },
-                                child:  Container(
-                                  alignment: Alignment.centerRight,
-                                  margin: EdgeInsets.only(
-                                      top: SizeConfig.blockSizeVertical * 3,
-                                      right: SizeConfig.blockSizeHorizontal * 5),
-                                  child: Image.asset(
-                                    "assets/images/pen.png",
-                                    height: 25,
-                                    width: 25,
-                                  ),
-                                ),
-                              ),
                             ],
                           ),
                           Container(
                             margin: EdgeInsets.only(
-                              top: SizeConfig.blockSizeVertical *2,
+                              top: SizeConfig.blockSizeVertical * 2,
                               left: SizeConfig.blockSizeHorizontal * 5,
                             ),
                             alignment: Alignment.topLeft,
@@ -197,12 +141,12 @@ class _ProfileState extends State<Profile> {
                           ),
                           Container(
                             margin: EdgeInsets.only(
-                              top: SizeConfig.blockSizeVertical *1,
+                              top: SizeConfig.blockSizeVertical * 1,
                               left: SizeConfig.blockSizeHorizontal * 5,
                             ),
                             alignment: Alignment.topLeft,
                             child: Text(
-                                name,
+                              widget.name,
                               style: TextStyle(
                                   letterSpacing: 1.0,
                                   fontWeight: FontWeight.normal,
@@ -212,14 +156,15 @@ class _ProfileState extends State<Profile> {
                             ),
                           ),
                           Container(
-                              margin: EdgeInsets.only(top: SizeConfig.blockSizeVertical *1),
+                              margin: EdgeInsets.only(
+                                  top: SizeConfig.blockSizeVertical * 1),
                               child: Divider(
                                 color: Colors.black12,
                                 thickness: 1,
                               )),
                           Container(
                             margin: EdgeInsets.only(
-                              top: SizeConfig.blockSizeVertical *1,
+                              top: SizeConfig.blockSizeVertical * 1,
                               left: SizeConfig.blockSizeHorizontal * 5,
                             ),
                             alignment: Alignment.topLeft,
@@ -235,12 +180,12 @@ class _ProfileState extends State<Profile> {
                           ),
                           Container(
                             margin: EdgeInsets.only(
-                              top: SizeConfig.blockSizeVertical *1,
+                              top: SizeConfig.blockSizeVertical * 1,
                               left: SizeConfig.blockSizeHorizontal * 5,
                             ),
                             alignment: Alignment.topLeft,
                             child: Text(
-                              address,
+                              widget.address,
                               style: TextStyle(
                                   letterSpacing: 1.0,
                                   fontWeight: FontWeight.normal,
@@ -250,14 +195,15 @@ class _ProfileState extends State<Profile> {
                             ),
                           ),
                           Container(
-                              margin: EdgeInsets.only(top: SizeConfig.blockSizeVertical *1),
+                              margin: EdgeInsets.only(
+                                  top: SizeConfig.blockSizeVertical * 1),
                               child: Divider(
                                 color: Colors.black12,
                                 thickness: 1,
                               )),
                           Container(
                             margin: EdgeInsets.only(
-                              top: SizeConfig.blockSizeVertical *1,
+                              top: SizeConfig.blockSizeVertical * 1,
                               left: SizeConfig.blockSizeHorizontal * 5,
                             ),
                             alignment: Alignment.topLeft,
@@ -273,12 +219,12 @@ class _ProfileState extends State<Profile> {
                           ),
                           Container(
                             margin: EdgeInsets.only(
-                              top: SizeConfig.blockSizeVertical *1,
+                              top: SizeConfig.blockSizeVertical * 1,
                               left: SizeConfig.blockSizeHorizontal * 5,
                             ),
                             alignment: Alignment.topLeft,
                             child: Text(
-                              age,
+                              widget.age,
                               style: TextStyle(
                                   letterSpacing: 1.0,
                                   fontWeight: FontWeight.normal,
@@ -288,14 +234,15 @@ class _ProfileState extends State<Profile> {
                             ),
                           ),
                           Container(
-                              margin: EdgeInsets.only(top: SizeConfig.blockSizeVertical *1),
+                              margin: EdgeInsets.only(
+                                  top: SizeConfig.blockSizeVertical * 1),
                               child: Divider(
                                 color: Colors.black12,
                                 thickness: 1,
                               )),
                           Container(
                             margin: EdgeInsets.only(
-                              top: SizeConfig.blockSizeVertical *1,
+                              top: SizeConfig.blockSizeVertical * 1,
                               left: SizeConfig.blockSizeHorizontal * 5,
                             ),
                             alignment: Alignment.topLeft,
@@ -311,12 +258,12 @@ class _ProfileState extends State<Profile> {
                           ),
                           Container(
                             margin: EdgeInsets.only(
-                              top: SizeConfig.blockSizeVertical *1,
+                              top: SizeConfig.blockSizeVertical * 1,
                               left: SizeConfig.blockSizeHorizontal * 5,
                             ),
                             alignment: Alignment.topLeft,
                             child: Text(
-                              "+91 $mobile",
+                              "+91 ${widget.mobile}",
                               style: TextStyle(
                                   letterSpacing: 1.0,
                                   fontWeight: FontWeight.normal,
@@ -326,14 +273,15 @@ class _ProfileState extends State<Profile> {
                             ),
                           ),
                           Container(
-                              margin: EdgeInsets.only(top: SizeConfig.blockSizeVertical *1),
+                              margin: EdgeInsets.only(
+                                  top: SizeConfig.blockSizeVertical * 1),
                               child: Divider(
                                 color: Colors.black12,
                                 thickness: 1,
                               )),
                           Container(
                             margin: EdgeInsets.only(
-                              top: SizeConfig.blockSizeVertical *1,
+                              top: SizeConfig.blockSizeVertical * 1,
                               left: SizeConfig.blockSizeHorizontal * 5,
                             ),
                             alignment: Alignment.topLeft,
@@ -349,12 +297,12 @@ class _ProfileState extends State<Profile> {
                           ),
                           Container(
                             margin: EdgeInsets.only(
-                              top: SizeConfig.blockSizeVertical *1,
+                              top: SizeConfig.blockSizeVertical * 1,
                               left: SizeConfig.blockSizeHorizontal * 5,
                             ),
                             alignment: Alignment.topLeft,
                             child: Text(
-                              email,
+                              widget.email,
                               style: TextStyle(
                                   letterSpacing: 1.0,
                                   fontWeight: FontWeight.normal,
@@ -364,54 +312,12 @@ class _ProfileState extends State<Profile> {
                             ),
                           ),
                           Container(
-                              margin: EdgeInsets.only(top: SizeConfig.blockSizeVertical *1),
+                              margin: EdgeInsets.only(
+                                  top: SizeConfig.blockSizeVertical * 1),
                               child: Divider(
                                 color: Colors.black12,
                                 thickness: 1,
                               )),
-
-                          Row(
-                            children: [
-                              Container(
-                                width: SizeConfig.blockSizeHorizontal * 80,
-                                margin: EdgeInsets.only(
-                                  top: SizeConfig.blockSizeVertical * 3,
-                                  bottom: SizeConfig.blockSizeVertical * 3,
-                                  left: SizeConfig.blockSizeHorizontal * 5,
-                                ),
-                                alignment: Alignment.topLeft,
-                                child: Text(
-                                  StringConstant.password,
-                                  style: TextStyle(
-                                      letterSpacing: 1.0,
-                                      fontWeight: FontWeight.normal,
-                                      fontFamily: 'Lato-Bold',
-                                      color: AppColors.blackColor,
-                                      fontSize: 20),
-                                ),
-                              ),
-                              GestureDetector(
-                                  onTap:() {
-                                    Navigator.of(context).push(MaterialPageRoute(
-                                        builder: (BuildContext context) =>
-                                            EditPassword()));
-                                  },
-                                child: Container(
-                                  alignment: Alignment.centerRight,
-                                  margin: EdgeInsets.only(
-                                      top: SizeConfig.blockSizeVertical * 3,
-                                      bottom: SizeConfig.blockSizeVertical * 3,
-                                      right: SizeConfig.blockSizeHorizontal * 5),
-                                  child: Image.asset(
-                                    "assets/images/pen.png",
-                                    height: 25,
-                                    width: 25,
-                                  ),
-                                ),
-                              )
-
-                            ],
-                          )
                         ],
                       ),
                     ),
@@ -424,7 +330,8 @@ class _ProfileState extends State<Profile> {
       ),
     );
   }
- /* showAlert() {
+
+  /* showAlert() {
     showDialog(
       context: context,
       child: Dialog(
@@ -436,11 +343,11 @@ class _ProfileState extends State<Profile> {
           margin: EdgeInsets.all(5),
           width: 300.0,
           height: 300.0,
-          *//*decoration: new BoxDecoration(
+          */ /*decoration: new BoxDecoration(
                 shape: BoxShape.rectangle,
                 color: const Color(0xFFFFFF),
                 borderRadius: new BorderRadius.all(new Radius.circular(10.0)),
-              ),*//*
+              ),*/ /*
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
@@ -454,9 +361,9 @@ class _ProfileState extends State<Profile> {
               ),
               InkWell(
                 onTap: () {
-                  *//* setState(() {
+                  */ /* setState(() {
                     image_value = false;
-                  });*//*
+                  });*/ /*
                   captureImage(ImageSource.camera);
                   Navigator.of(context).pop();
                 },
@@ -477,9 +384,9 @@ class _ProfileState extends State<Profile> {
               ),
               InkWell(
                 onTap: () {
-                  *//* setState(() {
+                  */ /* setState(() {
                     image_value = false;
-                  });*//*
+                  });*/ /*
                   captureImage(ImageSource.gallery);
                   Navigator.of(context).pop();
                 },
@@ -521,7 +428,6 @@ class _ProfileState extends State<Profile> {
       ),
     );
   }*/
-
 
   @override
   void dispose() {

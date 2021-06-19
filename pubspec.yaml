@@ -37,6 +37,8 @@ dependencies:
   drawerbehavior: ^1.0.0
   keyboard_visibility: ^0.5.6
   shared_preferences:
+  url_launcher:
+  youtube_player_flutter:
 
 
 dev_dependencies:
