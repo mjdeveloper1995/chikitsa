@@ -32,7 +32,6 @@ dependencies:
   connectivity: ^0.4.2
   cached_network_image: ^2.0.0
   image_picker: ^0.6.1+4
-  fluttertoast: ^7.0.4
   flutter_switch: ^0.0.2
   drawerbehavior: ^1.0.0
   keyboard_visibility: ^0.5.6

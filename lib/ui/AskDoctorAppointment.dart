@@ -7,7 +7,7 @@ import 'package:chikitsa/utils/screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_switch/flutter_switch.dart';
-import 'package:fluttertoast/fluttertoast.dart';
+
 
 class AskDoctorAppointment extends StatefulWidget {
   @override

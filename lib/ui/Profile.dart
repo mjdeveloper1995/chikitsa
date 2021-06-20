@@ -13,7 +13,7 @@ import 'package:chikitsa/utils/app.dart';
 import 'package:chikitsa/utils/screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_switch/flutter_switch.dart';
-import 'package:fluttertoast/fluttertoast.dart';
+
 import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
