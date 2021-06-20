@@ -11,4 +11,7 @@ class EndPoint {
   static final String patientList = _baseUrl + 'patientList';
   static final String forgotPassword = _baseUrl + 'forgotPassword';
   static final String changeDoctor = _baseUrl + 'changeDoctor';
+  static final String allAppointment = _baseUrl + 'allAppointments';
+
+  static final String addAppointment = _baseUrl + 'addAppointment';
 }

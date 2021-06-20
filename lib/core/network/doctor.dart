@@ -38,4 +38,22 @@ class DoctorService {
     return response;
   }
 
+  static Future<http.Response> appointmentList(Map<String,dynamic> formData) async {
+    final http.Response response = await http.post(
+      Uri.parse(EndPoint.allAppointment),
+      headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+      body: formData,
+    );
+    return response;
+  }
+
+  static Future<http.Response> addAppointment(Map<String,dynamic> formData) async {
+    final http.Response response = await http.post(
+      Uri.parse(EndPoint.addAppointment),
+      headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+      body: formData,
+    );
+    return response;
+  }
+
 }

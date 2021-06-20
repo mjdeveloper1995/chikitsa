@@ -75,6 +75,27 @@ class _HomeState extends State<Home> {
   String doctorMobile = '';
   String doctorName = '';
 
+
+  Future<void> logout() async {
+    final SharedPreferences preference = await SharedPreferences.getInstance();
+    await SharedPreferenceHelper.setString(preference, PrefConstant.type, '');
+    await SharedPreferenceHelper.setString(preference, PrefConstant.id, '');
+    await SharedPreferenceHelper.setString(preference, PrefConstant.name, '');
+    await SharedPreferenceHelper.setString(
+        preference, PrefConstant.hospital, '');
+    await SharedPreferenceHelper.setString(
+        preference, PrefConstant.speciality, '');
+    await SharedPreferenceHelper.setString(preference, PrefConstant.email, '');
+    await SharedPreferenceHelper.setString(preference, PrefConstant.phone, '');
+    await SharedPreferenceHelper.setString(
+        preference, PrefConstant.patients, '0');
+    Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(builder: (BuildContext context) => LoginPage()),
+            (route) => false);
+  }
+
+
   @override
   void initState() {
     super.initState();
@@ -1396,8 +1417,9 @@ class _HomeState extends State<Home> {
             onTap: () {
               Navigator.pop(context);
               setState(() {
-                Navigator.of(context).push(MaterialPageRoute(
-                    builder: (BuildContext context) => MyApp()));
+                logout();
+               /* Navigator.of(context).push(MaterialPageRoute(
+                    builder: (BuildContext context) => MyApp()));*/
               });
             },
           )
