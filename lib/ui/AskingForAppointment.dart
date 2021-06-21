@@ -57,9 +57,10 @@ class _AskingForAppointmentState extends State<AskingForAppointment> {
                           ),
                           child: InkWell(
                             onTap: () {
+                              //Navigator.of(context).push(Appointment(),)
                               Navigator.of(context).push(MaterialPageRoute(
                                   builder: (BuildContext context) =>
-                                      Appointment()));
+                                      Appointment(appointmentList[index])));
                             },
                             child: Container(
                               width: SizeConfig.blockSizeHorizontal * 100,

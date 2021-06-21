@@ -824,10 +824,10 @@ class _PatientDetailsState extends State<PatientDetails> {
             ),
             onTap: () {
               Navigator.pop(context);
-              setState(() {
+              /*setState(() {
                 Navigator.of(context).push(MaterialPageRoute(
                     builder: (BuildContext context) => Appointment()));
-              });
+              });*/
             },
           ),
           ListTile(

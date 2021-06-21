@@ -14,4 +14,5 @@ class EndPoint {
   static final String allAppointment = _baseUrl + 'allAppointments';
 
   static final String addAppointment = _baseUrl + 'addAppointment';
+  static final String doctorCommentAppointment = _baseUrl + 'doctorCommentAppointment';
 }
