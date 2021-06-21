@@ -58,7 +58,7 @@ class DoctorService {
 
   static Future<http.Response> doctorCommentOnAppointment(Map<String,dynamic> formData) async {
     final http.Response response = await http.post(
-      Uri.parse(EndPoint.addAppointment),
+      Uri.parse(EndPoint.doctorCommentAppointment),
       headers: {'Content-Type': 'application/x-www-form-urlencoded'},
       body: formData,
     );
