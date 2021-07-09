@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+import 'package:chikitsa/utils/notification_util.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:chikitsa/core/network/authentication.dart';
 import 'package:chikitsa/core/preference/pref_constant.dart';
 import 'package:chikitsa/core/preference/shared_preference.dart';
@@ -17,13 +19,42 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-void main() {
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await SystemChrome.setPreferredOrientations(
+      [DeviceOrientation.portraitDown, DeviceOrientation.portraitUp]);
+
+  const AndroidInitializationSettings initializationSettingsAndroid =
+  AndroidInitializationSettings('ic_launcher');
+  final IOSInitializationSettings initializationSettingsIOS =
+  IOSInitializationSettings(
+      requestAlertPermission: true,
+      requestBadgePermission: true,
+      requestSoundPermission: true,
+      onDidReceiveLocalNotification:
+          (int id, String title, String body, String payload) async {});
+  final InitializationSettings initializationSettings = InitializationSettings(
+      android: initializationSettingsAndroid, iOS: initializationSettingsIOS);
+  await flutterLocalNotificationsPlugin.initialize(initializationSettings,
+      onSelectNotification: (String payload) async {
+        if (payload != null) {
+          debugPrint('notification payload: ' + payload);
+        }
+      });
+
   runApp(MyApp());
 }
+
+
+final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+FlutterLocalNotificationsPlugin();
+
+NotificationAppLaunchDetails notificationAppLaunchDetails;
 
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    NotificationUtil.initializeNotification();
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: SplashScreen(),
@@ -297,218 +328,372 @@ class _LoginPageState extends State<LoginPage> {
     showDialog(
         context: context,
         builder: (BuildContext ct) {
-          return AlertDialog(
-            content: Stack(
-              overflow: Overflow.visible,
-              children: <Widget>[
-                Positioned(
-                  left: 110.0,
-                  top: -80.0,
-                  child: InkResponse(
-                      onTap: () {
-                        Navigator.of(context).pop();
-                      },
-                      child: Container(
-                        height: 40,
-                        width: 40,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: AppColors.themecolor,
-                          //this is the important line
-                        ),
-                        child: Icon(
-                          Icons.close,
-                          color: Colors.black87,
-                          size: 20,
-                        ),
-                      )),
-                ),
-                Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: <Widget>[
-                    Row(
-                      children: [
-                        Container(
-                            width: SizeConfig.blockSizeHorizontal * 14,
-                            height: SizeConfig.blockSizeVertical * 8,
-                            margin: EdgeInsets.only(
-                              top: SizeConfig.blockSizeVertical * 1,
-                            ),
-                            padding: EdgeInsets.only(
-                              left: SizeConfig.blockSizeVertical * 1,
-                              right: SizeConfig.blockSizeVertical * 1,
-                            ),
-                            alignment: Alignment.center,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(10),
-                              border: Border.all(
-                                color: Colors.black12,
-                                style: BorderStyle.solid,
-                                width: 1.0,
-                              ),
-                              color: Colors.transparent,
-                            ),
-                            child: Text(
-                              "+91",
-                              style: TextStyle(
-                                letterSpacing: 1.0,
-                                color: Colors.black87,
-                                fontWeight: FontWeight.bold,
-                                fontFamily: 'Lato-Regular',
-                              ),
-                            )),
-                        Expanded(
-                          child: Container(
-                            width: double.infinity,
-                            margin: EdgeInsets.only(
-                                top: SizeConfig.blockSizeVertical * 1,
-                                left: SizeConfig.blockSizeHorizontal * 2),
-                            padding: EdgeInsets.only(
-                              left: SizeConfig.blockSizeVertical * 1,
-                              right: SizeConfig.blockSizeVertical * 1,
-                            ),
-                            alignment: Alignment.centerLeft,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(10),
-                              border: Border.all(
-                                color: Colors.black12,
-                                style: BorderStyle.solid,
-                                width: 1.0,
-                              ),
-                              color: Colors.transparent,
-                            ),
-                            child: TextField(
-                              controller: mobileController,
-                              textInputAction: TextInputAction.next,
-                              keyboardType: TextInputType.phone,
-                              decoration: InputDecoration(
-                                border: InputBorder.none,
-                                prefixIcon: Icon(
-                                  Icons.phone_android_sharp,
-                                  color: Colors.black,
-                                  size: 25,
-                                ),
-                                focusedBorder: InputBorder.none,
-                                hintStyle: TextStyle(
-                                  fontSize: 12.0,
-                                  color: AppColors.blackColor,
-                                  fontFamily: "Montserrat-Regular",
-                                  fontStyle: FontStyle.normal,
-                                  decoration: TextDecoration.none,
-                                ),
-                                hintText: StringConstant.mobilenumber,
-                              ),
-                            ),
+          String _chosenValue = 'Sign in with phone';
+          int radioValue = 0;
+          return StatefulBuilder(builder: (ctx, setState) {
+            return AlertDialog(
+              content: Stack(
+                overflow: Overflow.visible,
+                children: <Widget>[
+                  Positioned(
+                    left: 110.0,
+                    top: -80.0,
+                    child: InkResponse(
+                        onTap: () {
+                          Navigator.of(context).pop();
+                        },
+                        child: Container(
+                          height: 40,
+                          width: 40,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: AppColors.themecolor,
+                            //this is the important line
                           ),
-                        )
-                      ],
-                    ),
-                    Container(
-                      width: MediaQuery.of(context).size.width,
-                      margin: EdgeInsets.only(
-                        top: SizeConfig.blockSizeVertical * 1,
-                      ),
-                      padding: EdgeInsets.only(
-                        left: SizeConfig.blockSizeVertical * 1,
-                        right: SizeConfig.blockSizeVertical * 1,
-                      ),
-                      alignment: Alignment.topLeft,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
-                        border: Border.all(
-                          color: Colors.black12,
-                          style: BorderStyle.solid,
-                          width: 1.0,
-                        ),
-                        color: Colors.transparent,
-                      ),
-                      child: TextField(
-                        controller: passwordController,
-                        textInputAction: TextInputAction.done,
-                        obscureText: !this._showPassword,
-                        textAlign: TextAlign.left,
-                        style: TextStyle(
-                          letterSpacing: 1.0,
-                          color: AppColors.blackColor,
-                          fontWeight: FontWeight.normal,
-                          fontFamily: 'Montserrat-Regular',
-                        ),
-                        decoration: InputDecoration(
-                          prefixIcon: Icon(
-                            Icons.vpn_key,
-                            color: Colors.black,
-                            size: 25,
+                          child: Icon(
+                            Icons.close,
+                            color: Colors.black87,
+                            size: 20,
                           ),
-                          border: InputBorder.none,
-                          focusedBorder: InputBorder.none,
-                          hintStyle: TextStyle(
-                            fontSize: 12.0,
-                            color: AppColors.blackColor,
-                            fontFamily: "Montserrat-Regular",
-                            fontStyle: FontStyle.normal,
-                            decoration: TextDecoration.none,
-                          ),
-                          hintText: StringConstant.password,
-                        ),
-                      ),
-                    ),
-                    Container(
-                        alignment: Alignment.centerRight,
+                        )),
+                  ),
+                  Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: <Widget>[
+                      Container(
+                        width: MediaQuery.of(context).size.width,
                         margin: EdgeInsets.only(
                           top: SizeConfig.blockSizeVertical * 1,
                         ),
-                        child: GestureDetector(
-                          child: Text(
-                            "Forgot Password?",
-                            textAlign: TextAlign.center,
+                        padding: EdgeInsets.only(
+                          left: (SizeConfig.blockSizeVertical * 1) + 8,
+                          right: SizeConfig.blockSizeVertical * 1,
+                        ),
+                        alignment: Alignment.topLeft,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          border: Border.all(
+                            color: Colors.black12,
+                            style: BorderStyle.solid,
+                            width: 1.0,
+                          ),
+                          color: Colors.transparent,
+                        ),
+                        height: 48,
+                        child: DropdownButton<String>(
+                          isExpanded: true,
+                          underline: SizedBox(),
+                          focusColor: Colors.white,
+                          value: _chosenValue,
+                          //elevation: 5,
+                          style: TextStyle(color: Colors.white),
+                          iconEnabledColor: Colors.black,
+                          items: <String>[
+                            'Sign in with phone',
+                            'Sign in with email',
+                          ].map<DropdownMenuItem<String>>((String value) {
+                            return DropdownMenuItem<String>(
+                              value: value,
+                              child: Text(
+                                value,
+                                style: TextStyle(color: Colors.black),
+                              ),
+                            );
+                          }).toList(),
+                          hint: Text(
+                            "Please choose a langauage",
                             style: TextStyle(
-                                decoration: TextDecoration.none,
+                                color: Colors.black,
+                                fontSize: 14,
+                                fontWeight: FontWeight.w500),
+                          ),
+                          onChanged: (String value) {
+                            setState(() {
+                              _chosenValue = value;
+                            });
+                          },
+                        ),
+                      ),
+                      if (_chosenValue == 'Sign in with phone')
+                        Row(
+                          children: [
+                            Container(
+                                width: SizeConfig.blockSizeHorizontal * 14,
+                                height: SizeConfig.blockSizeVertical * 8,
+                                margin: EdgeInsets.only(
+                                  top: SizeConfig.blockSizeVertical * 1,
+                                ),
+                                padding: EdgeInsets.only(
+                                  left: SizeConfig.blockSizeVertical * 1,
+                                  right: SizeConfig.blockSizeVertical * 1,
+                                ),
+                                alignment: Alignment.center,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(10),
+                                  border: Border.all(
+                                    color: Colors.black12,
+                                    style: BorderStyle.solid,
+                                    width: 1.0,
+                                  ),
+                                  color: Colors.transparent,
+                                ),
+                                child: Text(
+                                  "+91",
+                                  style: TextStyle(
+                                    letterSpacing: 1.0,
+                                    color: Colors.black87,
+                                    fontWeight: FontWeight.bold,
+                                    fontFamily: 'Lato-Regular',
+                                  ),
+                                )),
+                            Expanded(
+                              child: Container(
+                                width: double.infinity,
+                                margin: EdgeInsets.only(
+                                    top: SizeConfig.blockSizeVertical * 1,
+                                    left: SizeConfig.blockSizeHorizontal * 2),
+                                padding: EdgeInsets.only(
+                                  left: SizeConfig.blockSizeVertical * 1,
+                                  right: SizeConfig.blockSizeVertical * 1,
+                                ),
+                                alignment: Alignment.centerLeft,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(10),
+                                  border: Border.all(
+                                    color: Colors.black12,
+                                    style: BorderStyle.solid,
+                                    width: 1.0,
+                                  ),
+                                  color: Colors.transparent,
+                                ),
+                                child: TextField(
+                                  controller: mobileController,
+                                  textInputAction: TextInputAction.next,
+                                  keyboardType: TextInputType.phone,
+                                  decoration: InputDecoration(
+                                    border: InputBorder.none,
+                                    prefixIcon: Icon(
+                                      Icons.phone_android_sharp,
+                                      color: Colors.black,
+                                      size: 25,
+                                    ),
+                                    focusedBorder: InputBorder.none,
+                                    hintStyle: TextStyle(
+                                      fontSize: 12.0,
+                                      color: AppColors.blackColor,
+                                      fontFamily: "Montserrat-Regular",
+                                      fontStyle: FontStyle.normal,
+                                      decoration: TextDecoration.none,
+                                    ),
+                                    hintText: StringConstant.mobilenumber,
+                                  ),
+                                ),
+                              ),
+                            )
+                          ],
+                        )
+                      else
+                        Container(
+                          width: MediaQuery.of(context).size.width,
+                          margin: EdgeInsets.only(
+                            top: SizeConfig.blockSizeVertical * 1,
+                          ),
+                          padding: EdgeInsets.only(
+                            left: SizeConfig.blockSizeVertical * 1,
+                            right: SizeConfig.blockSizeVertical * 1,
+                          ),
+                          alignment: Alignment.topLeft,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10),
+                            border: Border.all(
+                              color: Colors.black12,
+                              style: BorderStyle.solid,
+                              width: 1.0,
+                            ),
+                            color: Colors.transparent,
+                          ),
+                          child: TextField(
+                            controller: emailController,
+                            textInputAction: TextInputAction.done,
+                            textAlign: TextAlign.left,
+                            keyboardType: TextInputType.emailAddress,
+                            style: TextStyle(
+                              letterSpacing: 1.0,
+                              color: AppColors.blackColor,
+                              fontWeight: FontWeight.normal,
+                              fontFamily: 'Montserrat-Regular',
+                            ),
+                            decoration: InputDecoration(
+                              prefixIcon: Icon(
+                                Icons.email,
+                                color: Colors.black,
+                                size: 25,
+                              ),
+                              border: InputBorder.none,
+                              focusedBorder: InputBorder.none,
+                              hintStyle: TextStyle(
                                 fontSize: 12.0,
                                 color: AppColors.blackColor,
                                 fontFamily: "Montserrat-Regular",
-                                fontStyle: FontStyle.normal),
+                                fontStyle: FontStyle.normal,
+                                decoration: TextDecoration.none,
+                              ),
+                              hintText: StringConstant.email,
+                            ),
                           ),
-                          onTap: () {
-                            Navigator.of(context).pop();
-                            showForgotPopup();
-                          },
-                        )),
-                    GestureDetector(
-                      onTap: () {
-                        Navigator.of(context).pop();
-                        onSubmit(context);
-                      },
-                      child: Container(
+                        ),
+                      Container(
+                        width: MediaQuery.of(context).size.width,
                         margin: EdgeInsets.only(
                           top: SizeConfig.blockSizeVertical * 1,
                         ),
-                        width: SizeConfig.blockSizeHorizontal * 60,
-                        height: SizeConfig.blockSizeHorizontal * 15,
-                        child: Card(
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10.0),
+                        padding: EdgeInsets.only(
+                          left: SizeConfig.blockSizeVertical * 1,
+                          right: SizeConfig.blockSizeVertical * 1,
+                        ),
+                        alignment: Alignment.topLeft,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          border: Border.all(
+                            color: Colors.black12,
+                            style: BorderStyle.solid,
+                            width: 1.0,
+                          ),
+                          color: Colors.transparent,
+                        ),
+                        child: TextField(
+                          controller: passwordController,
+                          textInputAction: TextInputAction.done,
+                          obscureText: !this._showPassword,
+                          textAlign: TextAlign.left,
+                          style: TextStyle(
+                            letterSpacing: 1.0,
+                            color: AppColors.blackColor,
+                            fontWeight: FontWeight.normal,
+                            fontFamily: 'Montserrat-Regular',
+                          ),
+                          decoration: InputDecoration(
+                            prefixIcon: Icon(
+                              Icons.vpn_key,
+                              color: Colors.black,
+                              size: 25,
                             ),
-                            color: AppColors.themecolor,
-                            child: Container(
-                              alignment: Alignment.center,
-                              child: Text(
-                                StringConstant.signin.toUpperCase(),
+                            border: InputBorder.none,
+                            focusedBorder: InputBorder.none,
+                            hintStyle: TextStyle(
+                              fontSize: 12.0,
+                              color: AppColors.blackColor,
+                              fontFamily: "Montserrat-Regular",
+                              fontStyle: FontStyle.normal,
+                              decoration: TextDecoration.none,
+                            ),
+                            hintText: StringConstant.password,
+                          ),
+                        ),
+                      ),
+                      Container(
+                          alignment: Alignment.centerRight,
+                          margin: EdgeInsets.only(
+                            top: SizeConfig.blockSizeVertical * 1,
+                          ),
+                          child: GestureDetector(
+                            child: Text(
+                              "Forgot Password?",
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                  decoration: TextDecoration.none,
+                                  fontSize: 12.0,
+                                  color: AppColors.blackColor,
+                                  fontFamily: "Montserrat-Regular",
+                                  fontStyle: FontStyle.normal),
+                            ),
+                            onTap: () {
+                              Navigator.of(context).pop();
+                              showForgotPopup();
+                            },
+                          )),
+                      Container(
+                          alignment: Alignment.centerRight,
+                          margin: EdgeInsets.only(
+                            top: SizeConfig.blockSizeVertical * 1,
+                          ),
+                          child: Row(
+                            children: [
+                              Radio(
+                                  value: 0,
+                                  groupValue: radioValue,
+                                  activeColor: AppColors.themecolor,
+                                  onChanged: (value) {
+                                    setState(() {
+                                      radioValue = value;
+                                    });
+                                  }),
+                              Text(
+                                'Patient',
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
-                                    color: Colors.white,
                                     fontFamily: 'Lato-Regular',
                                     fontWeight: FontWeight.normal,
                                     fontSize: 16,
                                     letterSpacing: 1.0),
                               ),
-                            )),
+                              Radio(
+                                  value: 1,
+                                  groupValue: radioValue,
+                                  activeColor: AppColors.themecolor,
+                                  onChanged: (value) {
+                                    setState(() {
+                                      radioValue = value;
+                                    });
+                                  }),
+                              Text(
+                                'Doctor',
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                    fontFamily: 'Lato-Regular',
+                                    fontWeight: FontWeight.normal,
+                                    fontSize: 16,
+                                    letterSpacing: 1.0),
+                              ),
+                            ],
+                          )),
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.of(context).pop();
+                          onSubmit(context, radioValue, _chosenValue);
+                        },
+                        child: Container(
+                          margin: EdgeInsets.only(
+                            top: SizeConfig.blockSizeVertical * 1,
+                          ),
+                          width: SizeConfig.blockSizeHorizontal * 60,
+                          height: SizeConfig.blockSizeHorizontal * 15,
+                          child: Card(
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10.0),
+                              ),
+                              color: AppColors.themecolor,
+                              child: Container(
+                                alignment: Alignment.center,
+                                child: Text(
+                                  StringConstant.signin.toUpperCase(),
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                      color: Colors.white,
+                                      fontFamily: 'Lato-Regular',
+                                      fontWeight: FontWeight.normal,
+                                      fontSize: 16,
+                                      letterSpacing: 1.0),
+                                ),
+                              )),
+                        ),
                       ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          );
+                    ],
+                  ),
+                ],
+              ),
+            );
+          });
         });
   }
 
@@ -642,31 +827,32 @@ class _LoginPageState extends State<LoginPage> {
         _isLoading = false;
       });
 
-      if (response.statusCode == 200){
+      if (response.statusCode == 200) {
         final jsonData = json.decode(response.body);
         showAlertDialog(context, jsonData["message"]);
-      }
-      else {
+      } else {
         showAlertDialog(context, response.body.toString());
       }
-
-    }catch (error) {
+    } catch (error) {
       setState(() {
         _isLoading = false;
       });
       showAlertDialog(context, error.toString());
     }
-
   }
 
-  Future<void> onSubmit(BuildContext context) async {
+  Future<void> onSubmit(
+      BuildContext context, int userType, String loginType) async {
+
+    print(emailController.text);
+
     if (!await (InternetCheck().check())) {
       showAlertDialog(context, 'No internet connection available');
       return;
     }
 
-    if (isValidate() is String) {
-      showAlertDialog(context, isValidate() as String);
+    if (isValidate(loginType) is String) {
+      showAlertDialog(context, isValidate(loginType) as String);
       return;
     }
 
@@ -676,11 +862,17 @@ class _LoginPageState extends State<LoginPage> {
       });
 
       final formData = new Map<String, dynamic>();
-      formData['phone'] = mobileController.text.trim();
+      if (loginType == 'Sign in with phone')
+        formData['phone'] = mobileController.text.trim();
+      else
+        formData['email'] = emailController.text.trim();
       formData['password'] = passwordController.text.trim();
-      formData['fcm_token'] = 'testValue';
+      formData['type'] = userType == 0 ? 'Patient' : 'Doctor';
+      formData['fcm_token'] = StringConstant.pushToken;
 
-      final response = await AuthenticationService.login(formData);
+      print(formData.toString());
+
+      final response = await AuthenticationService.login(formData,loginType == 'Sign in with phone');
       print(response.statusCode);
       print(response.body);
 
@@ -704,16 +896,16 @@ class _LoginPageState extends State<LoginPage> {
                 preference, PrefConstant.name, jsonData['data']['name']);
             await SharedPreferenceHelper.setString(
                 preference, PrefConstant.address, jsonData['data']['address']);
-            await SharedPreferenceHelper.setString(
-                preference, PrefConstant.age, jsonData['data']['age'].toString());
+            await SharedPreferenceHelper.setString(preference, PrefConstant.age,
+                jsonData['data']['age'].toString());
             await SharedPreferenceHelper.setString(
                 preference, PrefConstant.email, jsonData['data']['email']);
             await SharedPreferenceHelper.setString(
                 preference, PrefConstant.phone, jsonData['data']['phone']);
 
             if (jsonData['doctor'] != null) {
-              await SharedPreferenceHelper.setString(preference,
-                  PrefConstant.doctorId, jsonData['doctor']['_id']);
+              await SharedPreferenceHelper.setString(
+                  preference, PrefConstant.doctorId, jsonData['doctor']['_id']);
               await SharedPreferenceHelper.setString(preference,
                   PrefConstant.doctorName, jsonData['doctor']['name']);
               await SharedPreferenceHelper.setString(preference,
@@ -764,12 +956,14 @@ class _LoginPageState extends State<LoginPage> {
     }
   }
 
-  dynamic isValidate() {
-    if (mobileController.text.isEmpty) {
+  dynamic isValidate(String loginType) {
+    if (mobileController.text.isEmpty &&  loginType == 'Sign in with phone') {
       return 'Mobile number should not empty';
-    } else if (mobileController.text.length != 10) {
+    } else if (mobileController.text.length != 10 &&  loginType == 'Sign in with phone') {
       return 'Mobile number is not correct';
-    } else if (passwordController.text.isEmpty) {
+    } if (emailController.text.isEmpty &&  loginType != 'Sign in with phone') {
+      return 'Email should not empty';
+    }  else if (passwordController.text.isEmpty) {
       return 'Password should not be empty';
     }
     return true;

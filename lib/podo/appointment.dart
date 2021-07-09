@@ -9,6 +9,7 @@ class AppointmentItem {
    String patientName;
    String status;
    String time;
+   String doctorAdvice;
 
   AppointmentItem(
       {this.id,
@@ -20,7 +21,8 @@ class AppointmentItem {
       this.patientId,
       this.patientName,
       this.status,
-      this.time});
+      this.time,
+      this.doctorAdvice});
 
   factory AppointmentItem.fromJson(Map<String, dynamic> json) {
     return AppointmentItem(
@@ -34,6 +36,7 @@ class AppointmentItem {
       patientName: json['patientName'] as String ?? '',
       status: json['status'] as String ?? '',
       time: json['time'] as String ?? '',
+      doctorAdvice: json['doctorAdvice'] as String ?? '',
     );
   }
 

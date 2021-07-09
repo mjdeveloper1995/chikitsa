@@ -4,6 +4,7 @@ import 'package:chikitsa/main.dart';
 import 'package:chikitsa/ui/AllPatient.dart';
 import 'package:chikitsa/ui/AskingForAppointment.dart';
 import 'package:chikitsa/ui/DoctorProfile.dart';
+import 'package:chikitsa/ui/MyAppointment.dart';
 import 'package:chikitsa/utils/AppColors.dart';
 import 'package:chikitsa/utils/StringConstant.dart';
 import 'package:chikitsa/utils/screen.dart';
@@ -70,6 +71,28 @@ class _DoctorHomeState extends State<DoctorHome> {
                     ),
                   ),
                   Text('LOG OUT')
+                ],
+              ),
+            )),
+        PopupMenuItem(
+            value: 3,
+            child: GestureDetector(
+              onTap: () {
+                Navigator.pop(context);
+                Navigator.of(context).push(MaterialPageRoute(
+                    builder: (BuildContext context) => MyAppointment()));
+              },
+              child: Row(
+                children: <Widget>[
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(2, 2, 8, 2),
+                    child: Image.asset(
+                      "assets/images/age.png",
+                      height: 20,
+                      width: 20,
+                    ),
+                  ),
+                  Text('Appointment')
                 ],
               ),
             )),
@@ -392,183 +415,6 @@ class _DoctorHomeState extends State<DoctorHome> {
                         )),
 
                         // Quick View
-
-                        /*     Container(
-                          margin: EdgeInsets.only(
-                            top: SizeConfig.blockSizeVertical * 1,
-                            left: SizeConfig.blockSizeVertical * 3,
-                          ),
-                          alignment: Alignment.topLeft,
-                          child: Text(
-                            StringConstant.quickview,
-                            style: TextStyle(
-                                letterSpacing: 1.0,
-                                fontWeight: FontWeight.normal,
-                                fontFamily: 'Montserrat-Regular',
-                                color: AppColors.blackColor,
-                                fontSize: 16),
-                          ),
-                        ),
-                        Container(
-                            margin: EdgeInsets.only(
-                              top: SizeConfig.blockSizeVertical * 3,
-                              left: SizeConfig.blockSizeHorizontal * 5,
-                              right: SizeConfig.blockSizeHorizontal * 5,
-                            ),
-                            padding: EdgeInsets.only(
-                              top: SizeConfig.blockSizeVertical *2,
-                              bottom: SizeConfig.blockSizeVertical *2,
-                              left: SizeConfig.blockSizeHorizontal * 2,
-                              right: SizeConfig.blockSizeHorizontal * 2,
-                            ),
-                            alignment: Alignment.centerLeft,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(10),
-                              border: Border.all(
-                                color: Colors.black12,
-                                style: BorderStyle.solid,
-                                width: 1.0,
-                              ),
-                              color: Colors.transparent,
-                            ),
-                            child: Row(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                Container(
-                                  child: Image.asset(
-                                    "assets/images/doctors.png",
-                                    height: 30,
-                                    width: 30,
-                                  ),
-                                ),
-                                Container(
-                                  margin: EdgeInsets.only(
-                                    top: SizeConfig.blockSizeVertical * 1,
-                                    left: SizeConfig.blockSizeVertical * 3,
-                                  ),
-                                  alignment: Alignment.topLeft,
-                                  child: Text(
-                                    "Samita Kaushik",
-                                    style: TextStyle(
-                                        letterSpacing: 1.0,
-                                        fontWeight: FontWeight.normal,
-                                        fontFamily: 'Montserrat-Regular',
-                                        color: AppColors.blackColor,
-                                        fontSize: 16),
-                                  ),
-                                ),
-
-                              ],
-                            )
-
-                        ),
-                        Container(
-                            margin: EdgeInsets.only(
-                              top: SizeConfig.blockSizeVertical * 3,
-                              left: SizeConfig.blockSizeHorizontal * 5,
-                              right: SizeConfig.blockSizeHorizontal * 5,
-                            ),
-                            padding: EdgeInsets.only(
-                              top: SizeConfig.blockSizeVertical *2,
-                              bottom: SizeConfig.blockSizeVertical *2,
-                              left: SizeConfig.blockSizeHorizontal * 2,
-                              right: SizeConfig.blockSizeHorizontal * 2,
-                            ),
-                            alignment: Alignment.centerLeft,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(10),
-                              border: Border.all(
-                                color: Colors.black12,
-                                style: BorderStyle.solid,
-                                width: 1.0,
-                              ),
-                              color: Colors.transparent,
-                            ),
-                            child: Row(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                Container(
-                                  child: Image.asset(
-                                    "assets/images/hosp.png",
-                                    height: 30,
-                                    width: 30,
-                                  ),
-                                ),
-                                Container(
-                                  margin: EdgeInsets.only(
-                                    top: SizeConfig.blockSizeVertical * 1,
-                                    left: SizeConfig.blockSizeVertical * 3,
-                                  ),
-                                  alignment: Alignment.topLeft,
-                                  child: Text(
-                                    "Fortis Hospital",
-                                    style: TextStyle(
-                                        letterSpacing: 1.0,
-                                        fontWeight: FontWeight.normal,
-                                        fontFamily: 'Montserrat-Regular',
-                                        color: AppColors.blackColor,
-                                        fontSize: 16),
-                                  ),
-                                ),
-
-                              ],
-                            )
-
-                        ),
-                        Container(
-                            margin: EdgeInsets.only(
-                              top: SizeConfig.blockSizeVertical * 3,
-                              left: SizeConfig.blockSizeHorizontal * 5,
-                              right: SizeConfig.blockSizeHorizontal * 5,
-                            ),
-                            padding: EdgeInsets.only(
-                              top: SizeConfig.blockSizeVertical *2,
-                              bottom: SizeConfig.blockSizeVertical *2,
-                              left: SizeConfig.blockSizeHorizontal * 2,
-                              right: SizeConfig.blockSizeHorizontal * 2,
-                            ),
-                            alignment: Alignment.centerLeft,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(10),
-                              border: Border.all(
-                                color: Colors.black12,
-                                style: BorderStyle.solid,
-                                width: 1.0,
-                              ),
-                              color: Colors.transparent,
-                            ),
-                            child: Row(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                Container(
-                                  child: Image.asset(
-                                    "assets/images/special.png",
-                                    height: 30,
-                                    width: 30,
-                                  ),
-                                ),
-
-                                Container(
-                                  margin: EdgeInsets.only(
-                                    top: SizeConfig.blockSizeVertical * 1,
-                                    left: SizeConfig.blockSizeVertical * 3,
-                                  ),
-                                  alignment: Alignment.topLeft,
-                                  child: Text(
-                                    "Skin Specialist",
-                                    style: TextStyle(
-                                        letterSpacing: 1.0,
-                                        fontWeight: FontWeight.normal,
-                                        fontFamily: 'Montserrat-Regular',
-                                        color: AppColors.blackColor,
-                                        fontSize: 16),
-                                  ),
-                                ),
-
-                              ],
-                            )
-
-                        ),*/
                       ],
                     ),
                   ),

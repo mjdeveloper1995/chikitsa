@@ -327,7 +327,7 @@ class _EditPasswordState extends State<EditPassword> {
     );
 
     AlertDialog alert = AlertDialog(
-      title: Text("Error"),
+      title: Text("Alert"),
       content: Text(message),
       actions: [
         okButton,

@@ -4,6 +4,7 @@ import 'package:chikitsa/core/network/doctor.dart';
 import 'package:chikitsa/podo/appointment.dart';
 
 import 'package:chikitsa/ui/Appointment.dart';
+import 'package:chikitsa/ui/AppointmentDetail.dart';
 import 'package:chikitsa/ui/Home.dart';
 import 'package:chikitsa/ui/PatientDetails.dart';
 import 'package:chikitsa/utils/AppColors.dart';
@@ -15,12 +16,12 @@ import 'package:chikitsa/utils/screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_switch/flutter_switch.dart';
 
-class AskingForAppointment extends StatefulWidget {
+class MyAppointment extends StatefulWidget {
   @override
-  _AskingForAppointmentState createState() => _AskingForAppointmentState();
+  _MyAppointmentState createState() => _MyAppointmentState();
 }
 
-class _AskingForAppointmentState extends State<AskingForAppointment> {
+class _MyAppointmentState extends State<MyAppointment> {
   bool _isLoading = false;
 
   @override
@@ -44,7 +45,7 @@ class _AskingForAppointmentState extends State<AskingForAppointment> {
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                createUpperBar(context, "Asked for your Appointment"),
+                createUpperBar(context, "Accepted Appointment"),
                 Expanded(
                   child: ListView.builder(
                       itemCount: appointmentList.length,
@@ -57,11 +58,9 @@ class _AskingForAppointmentState extends State<AskingForAppointment> {
                           ),
                           child: InkWell(
                             onTap: () async {
-                              //Navigator.of(context).push(Appointment(),)
-                             await Navigator.of(context).push(MaterialPageRoute(
+                              Navigator.of(context).push(MaterialPageRoute(
                                   builder: (BuildContext context) =>
-                                      AppointmentScreen(appointmentList[index])));
-                             fetchAllAppointment();
+                                      AppointmentDetail(appointmentList[index])));
                             },
                             child: Container(
                               width: SizeConfig.blockSizeHorizontal * 100,
@@ -158,7 +157,7 @@ class _AskingForAppointmentState extends State<AskingForAppointment> {
 
       final formData = new Map<String, dynamic>();
       formData['doctorId'] = StringConstant.userId;
-      formData['status'] = 'PENDING';
+      formData['status'] = 'Approved';
 
       final response = await DoctorService.appointmentList(formData);
       setState(() {

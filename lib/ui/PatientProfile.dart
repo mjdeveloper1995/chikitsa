@@ -1,18 +1,12 @@
 import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:chikitsa/ui/EditPassword.dart';
-import 'package:chikitsa/ui/EditProfile.dart';
-import 'package:chikitsa/ui/Home.dart';
 import 'package:chikitsa/utils/AppColors.dart';
-import 'package:chikitsa/utils/InternetCheck.dart';
 import 'package:chikitsa/utils/StringConstant.dart';
 import 'package:chikitsa/utils/app.dart';
 import 'package:chikitsa/utils/screen.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_switch/flutter_switch.dart';
 
-import 'package:image_picker/image_picker.dart';
 
 class PatientProfile extends StatefulWidget {
   final String name;
@@ -34,22 +28,6 @@ class _PatientProfileState extends State<PatientProfile> {
   File _imageFile;
   String image;
   bool image_value = false;
-
-  Future<void> captureImage(ImageSource imageSource) async {
-    try {
-      final imageFile = await ImagePicker.pickImage(source: imageSource);
-      setState(() {
-        _imageFile = imageFile;
-        if (_imageFile != null) {
-          setState(() {
-            image_value = false;
-          });
-        }
-      });
-    } catch (e) {
-      print(e);
-    }
-  }
 
   @override
   Widget build(BuildContext context) {

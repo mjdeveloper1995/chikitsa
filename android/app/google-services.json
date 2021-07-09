@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "54736257425",
+    "project_id": "chikitsa-ac3ea",
+    "storage_bucket": "chikitsa-ac3ea.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:54736257425:android:ae96093362771b58b81a30",
+        "android_client_info": {
+          "package_name": "com.example.chikitsa"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "54736257425-3ub44cnbcddo33g3cnht2ffmldeared1.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.chikitsa",
+            "certificate_hash": "9a7fbee7509596d9834f37bd48a7780997fcfbf2"
+          }
+        },
+        {
+          "client_id": "54736257425-svs6etbl1ua4ilb4dp53jfc5b9sde8ff.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBMOImwalk7aZCO8NvTSSzjsVRZlPLKXAA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "54736257425-svs6etbl1ua4ilb4dp53jfc5b9sde8ff.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

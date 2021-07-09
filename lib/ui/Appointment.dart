@@ -1,6 +1,8 @@
 import 'dart:convert';
 
 import 'package:chikitsa/core/network/doctor.dart';
+import 'package:chikitsa/core/preference/pref_constant.dart';
+import 'package:chikitsa/core/preference/shared_preference.dart';
 import 'package:chikitsa/podo/appointment.dart';
 import 'package:chikitsa/ui/Home.dart';
 import 'package:chikitsa/utils/AppColors.dart';
@@ -12,17 +14,18 @@ import 'package:chikitsa/utils/screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_switch/flutter_switch.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-class Appointment extends StatefulWidget {
+class AppointmentScreen extends StatefulWidget {
   final AppointmentItem appointmentItem;
 
-  Appointment(this.appointmentItem, {Key key}) : super(key: key);
+  AppointmentScreen(this.appointmentItem, {Key key}) : super(key: key);
 
   @override
-  _AppointmentState createState() => _AppointmentState();
+  _AppointmentScreenState createState() => _AppointmentScreenState();
 }
 
-class _AppointmentState extends State<Appointment> {
+class _AppointmentScreenState extends State<AppointmentScreen> {
   final _formKey = GlobalKey<FormState>();
   bool _isLoading = false;
 
@@ -31,31 +34,26 @@ class _AppointmentState extends State<Appointment> {
   final AdviceFocus = FocusNode();
   final ExtraCommentsFocus = FocusNode();
 
-  String _advice;
-  String _extaComments;
+  String doctorName;
 
   final TextEditingController adviceController = new TextEditingController();
   final TextEditingController extaCommentsController =
       new TextEditingController();
 
-  int _counter = 0;
-  String dropDownValue;
-  List<String> patientList = [
-    'Select Patient',
-    'Ajay',
-    'Jatin',
-    'Deepak',
-    'Rakesh',
-    'Neha',
-    'Palak',
-    'Roshni'
-  ];
 
   @override
   void initState() {
     //setFilters();
     super.initState();
     initView();
+    getInitialData();
+  }
+
+  Future<void> getInitialData() async {
+    final SharedPreferences preference = await SharedPreferences.getInstance();
+    doctorName =   SharedPreferenceHelper.getPrefString(preference, PrefConstant.name);
+
+    setState(() {});
   }
 
   void initView() {
@@ -91,12 +89,6 @@ class _AppointmentState extends State<Appointment> {
         _time = newTime;
       });
     }
-  }
-
-  setFilters() {
-    setState(() {
-      dropDownValue = patientList[0];
-    });
   }
 
   @override
@@ -216,7 +208,6 @@ class _AppointmentState extends State<Appointment> {
                                       FocusScope.of(context)
                                           .requestFocus(AdviceFocus);
                                     },
-                                    onSaved: (val) => _extaComments = val,
                                     textAlign: TextAlign.left,
                                     style: TextStyle(
                                       letterSpacing: 1.0,
@@ -284,7 +275,6 @@ class _AppointmentState extends State<Appointment> {
                                     else
                                       return null;
                                   },
-                                  onSaved: (val) => _advice = val,
                                   textAlign: TextAlign.left,
                                   style: TextStyle(
                                     letterSpacing: 1.0,
@@ -700,6 +690,7 @@ class _AppointmentState extends State<Appointment> {
       formData['appointmentId'] = widget.appointmentItem.id;
       formData['doctorComment'] = extaCommentsController.text;
       formData['doctorAdvice'] = adviceController.text;
+      formData['doctorName'] = doctorName;
       formData['date'] =
           '${selectedDate.year}-${selectedDate.month}-${selectedDate.day}';
       formData['time'] = '${_time.hour}:${_time.minute}';
@@ -736,7 +727,7 @@ class _AppointmentState extends State<Appointment> {
     );
 
     AlertDialog alert = AlertDialog(
-      title: Text("Error"),
+      title: Text("Alert"),
       content: Text(message),
       actions: [
         okButton,

@@ -64,4 +64,52 @@ class DoctorService {
     );
     return response;
   }
+
+  static Future<http.Response> addNotification(Map<String,dynamic> formData) async {
+    final http.Response response = await http.post(
+      Uri.parse(EndPoint.addNotification),
+      headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+      body: formData,
+    );
+    return response;
+  }
+
+  static Future<http.Response> allNotifications(Map<String,dynamic> formData) async {
+    final http.Response response = await http.post(
+      Uri.parse(EndPoint.allNotifications),
+      headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+      body: formData,
+    );
+    return response;
+  }
+
+  static Future<http.Response> addMedicine(Map<String,dynamic> formData) async {
+    final http.Response response = await http.post(
+      Uri.parse(EndPoint.addMedicine),
+      headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+      body: formData,
+    );
+    return response;
+  }
+
+  static Future<http.Response> allMedications(Map<String,dynamic> formData) async {
+    final http.Response response = await http.post(
+      Uri.parse(EndPoint.allMedications),
+      headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+      body: formData,
+    );
+    return response;
+  }
+
+
+  static Future<http.Response> deleteMedicine(Map<String,dynamic> formData) async {
+    final http.Response response = await http.post(
+      Uri.parse(EndPoint.deleteMedicine),
+      headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+      body: formData,
+    );
+    return response;
+  }
+
+
 }

@@ -489,7 +489,7 @@ class _ChangeDoctorState extends State<ChangeDoctor> {
     );
 
     AlertDialog alert = AlertDialog(
-      title: Text("Error"),
+      title: Text("Alert"),
       content: Text(message),
       actions: [
         okButton,

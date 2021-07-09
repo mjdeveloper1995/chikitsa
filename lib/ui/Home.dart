@@ -11,6 +11,7 @@ import 'package:chikitsa/ui/Profile.dart';
 import 'package:chikitsa/ui/covid_screen.dart';
 import 'package:chikitsa/utils/AppColors.dart';
 import 'package:chikitsa/utils/StringConstant.dart';
+import 'package:chikitsa/utils/notification_util.dart';
 import 'package:chikitsa/utils/screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -32,25 +33,40 @@ class _HomeState extends State<Home> {
   bool showFab = true;
   List<SampleStepTile> my_steps = [
     new SampleStepTile(
-        title: new Text("3Feb", style: TextStyle(fontSize: 12)), content: new Text("04:00 PM",
-      style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold,color: Colors.black),
-    )),
+        title: new Text("3Feb", style: TextStyle(fontSize: 12)),
+        content: new Text(
+          "04:00 PM",
+          style: TextStyle(
+              fontSize: 10, fontWeight: FontWeight.bold, color: Colors.black),
+        )),
     new SampleStepTile(
         title: new Text("3Feb", style: TextStyle(fontSize: 12)),
         content: new Text("08:00 PM",
-            style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold,color: Colors.black))),
+            style: TextStyle(
+                fontSize: 10,
+                fontWeight: FontWeight.bold,
+                color: Colors.black))),
     new SampleStepTile(
         title: new Text("3Feb", style: TextStyle(fontSize: 12)),
         content: new Text("08:00 AM",
-            style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold,color: Colors.black))),
+            style: TextStyle(
+                fontSize: 10,
+                fontWeight: FontWeight.bold,
+                color: Colors.black))),
     new SampleStepTile(
         title: new Text("3Feb", style: TextStyle(fontSize: 12)),
         content: new Text("10:00 AM",
-            style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold,color: Colors.black))),
+            style: TextStyle(
+                fontSize: 10,
+                fontWeight: FontWeight.bold,
+                color: Colors.black))),
     new SampleStepTile(
         title: new Text("3Feb", style: TextStyle(fontSize: 12)),
         content: new Text("02:00 PM",
-            style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold,color: Colors.black)))
+            style: TextStyle(
+                fontSize: 10,
+                fontWeight: FontWeight.bold,
+                color: Colors.black)))
   ];
 
   final reasonOfTakingFocus = FocusNode();
@@ -75,7 +91,6 @@ class _HomeState extends State<Home> {
   String doctorMobile = '';
   String doctorName = '';
 
-
   Future<void> logout() async {
     final SharedPreferences preference = await SharedPreferences.getInstance();
     await SharedPreferenceHelper.setString(preference, PrefConstant.type, '');
@@ -92,22 +107,24 @@ class _HomeState extends State<Home> {
     Navigator.pushAndRemoveUntil(
         context,
         MaterialPageRoute(builder: (BuildContext context) => LoginPage()),
-            (route) => false);
+        (route) => false);
   }
-
 
   @override
   void initState() {
     super.initState();
     getInitialData();
+    NotificationUtil.initializeNotification();
   }
 
   Future<void> getInitialData() async {
     final SharedPreferences preference = await SharedPreferences.getInstance();
     id = SharedPreferenceHelper.getPrefString(preference, PrefConstant.id);
     name = SharedPreferenceHelper.getPrefString(preference, PrefConstant.name);
-    doctorMobile = SharedPreferenceHelper.getPrefString(preference, PrefConstant.doctorPhone);
-    doctorName = SharedPreferenceHelper.getPrefString(preference, PrefConstant.doctorName);
+    doctorMobile = SharedPreferenceHelper.getPrefString(
+        preference, PrefConstant.doctorPhone);
+    doctorName = SharedPreferenceHelper.getPrefString(
+        preference, PrefConstant.doctorName);
 
     StringConstant.userId = id;
     setState(() {});
@@ -522,10 +539,38 @@ class _HomeState extends State<Home> {
                                 ),
                                 GestureDetector(
                                   onTap: () {
+                                    if (medicineNameController.text.isEmpty) {
+                                      showAlertDialog(
+                                          context, 'Enter medicine name');
+                                      return;
+                                    }
+                                    if (reasonOfTakingController.text.isEmpty) {
+                                      showAlertDialog(context,
+                                          'Enter reason of taking medicine');
+                                      return;
+                                    }
+                                    MG = false;
+                                    G = false;
+                                    IU = false;
+                                    MCG = true;
+                                    String dose = '';
+                                    if (MG) {
+                                      dose = 'MG';
+                                    } else if (G) {
+                                      dose = 'G';
+                                    } else if (IU) {
+                                      dose = 'IU';
+                                    } else if (MCG) {
+                                      dose = 'MCG';
+                                    }
                                     Navigator.of(context).push(
                                         MaterialPageRoute(
                                             builder: (BuildContext context) =>
-                                                AddSchedule()));
+                                                AddSchedule(
+                                                    medicineNameController.text,
+                                                    reasonOfTakingController
+                                                        .text,
+                                                    dose)));
                                   },
                                   child: Container(
                                     margin: EdgeInsets.only(
@@ -565,6 +610,31 @@ class _HomeState extends State<Home> {
                 ));
           });
         });
+  }
+
+  void showAlertDialog(BuildContext context, String message) {
+    Widget okButton = FlatButton(
+      child: Text("OK"),
+      onPressed: () {
+        Navigator.of(context).pop();
+      },
+    );
+
+    AlertDialog alert = AlertDialog(
+      title: Text("Alert"),
+      content: Text(message),
+      actions: [
+        okButton,
+      ],
+    );
+
+    // show the dialog
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
+    );
   }
 
   @override
@@ -647,10 +717,10 @@ class _HomeState extends State<Home> {
                       ],
                     ),
                     GestureDetector(
-                      onTap: () async{
-                       await Navigator.of(context).push(MaterialPageRoute(
+                      onTap: () async {
+                        await Navigator.of(context).push(MaterialPageRoute(
                             builder: (BuildContext context) => Profile()));
-                       getInitialData();
+                        getInitialData();
                       },
                       child: Container(
                         margin: EdgeInsets.only(
@@ -844,7 +914,7 @@ class _HomeState extends State<Home> {
                                       letterSpacing: 1.0),
                                 ),
                               ),
-                            /*  SizedBox(
+                              /*  SizedBox(
                                 width: SizeConfig.blockSizeHorizontal * 26,
                               ),*/
                               Container(
@@ -883,15 +953,13 @@ class _HomeState extends State<Home> {
                                 ),
                               ),
                               GestureDetector(
-                                onTap: (){
-                                  if(doctorMobile == '')
-                                    return;
-                                  launch(
-                                      'tel://${doctorMobile ?? ''}');
+                                onTap: () {
+                                  if (doctorMobile == '') return;
+                                  launch('tel://${doctorMobile ?? ''}');
                                 },
                                 child: Container(
                                   margin: EdgeInsets.only(
-                                      top: SizeConfig.blockSizeVertical * 3,
+                                    top: SizeConfig.blockSizeVertical * 3,
                                   ),
                                   child: Image.asset(
                                     "assets/images/phone.png",
@@ -1113,8 +1181,7 @@ class _HomeState extends State<Home> {
                                                 textAlign: TextAlign.left,
                                                 style: TextStyle(
                                                     letterSpacing: 1.0,
-                                                    fontWeight:
-                                                        FontWeight.bold,
+                                                    fontWeight: FontWeight.bold,
                                                     fontFamily: 'Lato-Bold',
                                                     color: AppColors.blackColor,
                                                     fontSize: 11),
@@ -1172,8 +1239,7 @@ class _HomeState extends State<Home> {
                                                 textAlign: TextAlign.left,
                                                 style: TextStyle(
                                                     letterSpacing: 1.0,
-                                                    fontWeight:
-                                                        FontWeight.bold,
+                                                    fontWeight: FontWeight.bold,
                                                     fontFamily: 'Lato-Bold',
                                                     color: AppColors.blackColor,
                                                     fontSize: 11),
@@ -1289,14 +1355,14 @@ class _HomeState extends State<Home> {
             ),
             onTap: () {
               Navigator.pop(context);
-              setState(() async{
+              setState(() async {
                 const String url =
                     'https://www.google.co.in/maps/search/nearby+hospitals';
                 if (await canLaunch(url))
-                await launch(url);
+                  await launch(url);
                 else
-                // can't launch url, there is some error
-                throw 'Could not launch $url';
+                  // can't launch url, there is some error
+                  throw 'Could not launch $url';
               });
             },
           ),
@@ -1342,10 +1408,10 @@ class _HomeState extends State<Home> {
             ),
             onTap: () {
               Navigator.pop(context);
-              setState(() async{
-               await Navigator.of(context).push(MaterialPageRoute(
+              setState(() async {
+                await Navigator.of(context).push(MaterialPageRoute(
                     builder: (BuildContext context) => ChangeDoctor()));
-               getInitialData();
+                getInitialData();
               });
             },
           ),
@@ -1367,10 +1433,11 @@ class _HomeState extends State<Home> {
             ),
             onTap: () {
               Navigator.pop(context);
-              setState(() async{
-                 await Navigator.of(context).push(MaterialPageRoute(
-                        builder: (BuildContext context) => CovidScreen()));
-                  SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
+              setState(() async {
+                await Navigator.of(context).push(MaterialPageRoute(
+                    builder: (BuildContext context) => CovidScreen()));
+                SystemChrome.setPreferredOrientations(
+                    [DeviceOrientation.portraitUp]);
               });
             },
           ),
@@ -1418,7 +1485,7 @@ class _HomeState extends State<Home> {
               Navigator.pop(context);
               setState(() {
                 logout();
-               /* Navigator.of(context).push(MaterialPageRoute(
+                /* Navigator.of(context).push(MaterialPageRoute(
                     builder: (BuildContext context) => MyApp()));*/
               });
             },

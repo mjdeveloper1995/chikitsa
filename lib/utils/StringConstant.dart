@@ -79,5 +79,7 @@ class StringConstant {
   static const String ExtracommentsfromPatient = "Extra comments from Patient";
 
   static String userId = '';
+  static String pushToken = '';
+
 
 }

@@ -542,7 +542,7 @@ class _DoctorRegistrationState extends State<DoctorRegistration> {
         formData['phone'] = mobileController.text.trim();
         formData['password'] = passwordController.text.trim();
         formData['type'] = 'Doctor';
-        formData['fcm_token'] = 'testValue';
+        formData['fcm_token'] = StringConstant.pushToken;
 
         final response = await AuthenticationService.registration(formData);
         print(response.statusCode);
@@ -572,7 +572,7 @@ class _DoctorRegistrationState extends State<DoctorRegistration> {
             await SharedPreferenceHelper.setString(
                 preference, PrefConstant.phone, jsonData['data']['phone']);
             await SharedPreferenceHelper.setString(preference,
-                PrefConstant.patients, jsonData['patients'].length.toString());
+                PrefConstant.patients, "0");
             Navigator.pushAndRemoveUntil(
                 context,
                 MaterialPageRoute(
@@ -604,7 +604,7 @@ class _DoctorRegistrationState extends State<DoctorRegistration> {
     );
 
     AlertDialog alert = AlertDialog(
-      title: Text("Error"),
+      title: Text("Alert"),
       content: Text(message),
       actions: [
         okButton,

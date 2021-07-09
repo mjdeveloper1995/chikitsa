@@ -791,7 +791,7 @@ class _PatientRegistrationState extends State<PatientRegistration> {
       formData['phone'] = mobileController.text.trim();
       formData['password'] = passwordController.text.trim();
       formData['type'] = 'Patient';
-      formData['fcm_token'] = 'testValue';
+      formData['fcm_token'] = StringConstant.pushToken;
       formData['adddoctor'] = isToggled.toString();
       if (isToggled) {
         formData['doctorId'] = doctorId;
@@ -865,7 +865,7 @@ class _PatientRegistrationState extends State<PatientRegistration> {
     );
 
     AlertDialog alert = AlertDialog(
-      title: Text("Error"),
+      title: Text("Alert"),
       content: Text(message),
       actions: [
         okButton,

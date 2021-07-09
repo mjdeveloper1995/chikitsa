@@ -451,7 +451,7 @@ class _EditProfileState extends State<EditProfile> {
     );
 
     AlertDialog alert = AlertDialog(
-      title: Text("Error"),
+      title: Text("Alert"),
       content: Text(message),
       actions: [
         okButton,

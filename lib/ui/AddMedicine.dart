@@ -1,11 +1,8 @@
-import 'package:chikitsa/ui/Home.dart';
 import 'package:chikitsa/utils/AppColors.dart';
-import 'package:chikitsa/utils/InternetCheck.dart';
 import 'package:chikitsa/utils/StringConstant.dart';
 import 'package:chikitsa/utils/app.dart';
 import 'package:chikitsa/utils/screen.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_switch/flutter_switch.dart';
 
 
 class AddMedicine extends StatefulWidget {

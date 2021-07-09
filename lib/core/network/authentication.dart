@@ -20,9 +20,9 @@ class AuthenticationService {
     return response;
   }
 
-  static Future<http.Response> login(Map<String,dynamic> formData) async {
+  static Future<http.Response> login(Map<String,dynamic> formData,bool isPhone) async {
     final http.Response response = await http.post(
-      Uri.parse(EndPoint.login),
+      Uri.parse(isPhone ? EndPoint.login : EndPoint.loginEmail),
       headers: {'Content-Type': 'application/x-www-form-urlencoded'},
       body: formData,
     );

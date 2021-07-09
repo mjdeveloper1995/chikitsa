@@ -3,9 +3,6 @@ import 'dart:convert';
 import 'package:chikitsa/core/network/doctor.dart';
 import 'package:chikitsa/core/preference/pref_constant.dart';
 import 'package:chikitsa/core/preference/shared_preference.dart';
-import 'package:chikitsa/ui/Appointment.dart';
-import 'package:chikitsa/ui/AskDoctorAppointment.dart';
-import 'package:chikitsa/ui/Home.dart';
 import 'package:chikitsa/utils/AppColors.dart';
 import 'package:chikitsa/utils/InternetCheck.dart';
 import 'package:chikitsa/utils/StringConstant.dart';
@@ -14,7 +11,6 @@ import 'package:chikitsa/utils/loading_widget.dart';
 import 'package:chikitsa/utils/screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_switch/flutter_switch.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class PatientAppointment extends StatefulWidget {
