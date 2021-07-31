@@ -1,16 +1,17 @@
-import 'package:chikitsa/ui/EditPassword.dart';
-import 'package:chikitsa/ui/EditProfile.dart';
-import 'package:chikitsa/ui/Home.dart';
+import 'package:chikitsa/podo/medicine.dart';
 import 'package:chikitsa/utils/AppColors.dart';
-import 'package:chikitsa/utils/InternetCheck.dart';
 import 'package:chikitsa/utils/StringConstant.dart';
 import 'package:chikitsa/utils/app.dart';
 import 'package:chikitsa/utils/screen.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_switch/flutter_switch.dart';
 
 
 class DietPillDetails extends StatefulWidget {
+
+  const DietPillDetails(this.medicineData);
+
+  final Medicine medicineData;
+
   @override
   _DietPillDetailsState createState() => _DietPillDetailsState();
 }
@@ -30,7 +31,7 @@ class _DietPillDetailsState extends State<DietPillDetails> {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            createUpperBar(context, "Diet Pill"),
+            createUpperBar(context, widget.medicineData.name),
             Expanded(
               child: Container(
                 child: SingleChildScrollView(
@@ -65,7 +66,7 @@ class _DietPillDetailsState extends State<DietPillDetails> {
                             ),
                             alignment: Alignment.topLeft,
                             child: Text(
-                              "Diet Pill",
+                              widget.medicineData.name,
                               style: TextStyle(
                                   letterSpacing: 1.0,
                                   fontWeight: FontWeight.normal,
@@ -105,7 +106,7 @@ class _DietPillDetailsState extends State<DietPillDetails> {
                             ),
                             alignment: Alignment.topLeft,
                             child: Text(
-                              "to lose weight",
+                              widget.medicineData.reason,
                               style: TextStyle(
                                   letterSpacing: 1.0,
                                   fontWeight: FontWeight.normal,
@@ -145,7 +146,7 @@ class _DietPillDetailsState extends State<DietPillDetails> {
                             ),
                             alignment: Alignment.topLeft,
                             child: Text(
-                              "MG",
+                              widget.medicineData.dose,
                               style: TextStyle(
                                   letterSpacing: 1.0,
                                   fontWeight: FontWeight.normal,
@@ -189,7 +190,7 @@ class _DietPillDetailsState extends State<DietPillDetails> {
                                 ),
                                 alignment: Alignment.topLeft,
                                 child: Text(
-                                  "2021-02-03",
+                                  widget.medicineData.from,
                                   style: TextStyle(
                                       letterSpacing: 1.0,
                                       fontWeight: FontWeight.normal,
@@ -224,7 +225,7 @@ class _DietPillDetailsState extends State<DietPillDetails> {
                                 ),
                                 alignment: Alignment.topLeft,
                                 child: Text(
-                                  "2021-02-10",
+                                  widget.medicineData.to,
                                   style: TextStyle(
                                       letterSpacing: 1.0,
                                       fontWeight: FontWeight.normal,
@@ -273,7 +274,7 @@ class _DietPillDetailsState extends State<DietPillDetails> {
                                 ),
                                 alignment: Alignment.topLeft,
                                 child: Text(
-                                  "Daily :",
+                                  "${widget.medicineData.schedule} :",
                                   style: TextStyle(
                                       letterSpacing: 1.0,
                                       fontWeight: FontWeight.normal,
@@ -290,7 +291,7 @@ class _DietPillDetailsState extends State<DietPillDetails> {
                                 ),
                                 alignment: Alignment.topLeft,
                                 child: Text(
-                                  "Two Time",
+                                  widget.medicineData.frequency,
                                   style: TextStyle(
                                       letterSpacing: 1.0,
                                       fontWeight: FontWeight.normal,
@@ -326,84 +327,7 @@ class _DietPillDetailsState extends State<DietPillDetails> {
                                   fontSize: 16),
                             ),
                           ),
-                          Row(
-                            children: [
-                              Container(
-                                width: SizeConfig.blockSizeHorizontal * 65,
-                                margin: EdgeInsets.only(
-                                  top: SizeConfig.blockSizeVertical * 3,
-                                  bottom: SizeConfig.blockSizeVertical * 1,
-                                  left: SizeConfig.blockSizeHorizontal * 5,
-                                ),
-                                alignment: Alignment.topLeft,
-                                child: Text(
-                                  "Morning",
-                                  style: TextStyle(
-                                      letterSpacing: 1.0,
-                                      fontWeight: FontWeight.normal,
-                                      fontFamily: 'Lato-Bold',
-                                      color: AppColors.blackColor,
-                                      fontSize: 14),
-                                ),
-                              ),
-                              Container(
-                                margin: EdgeInsets.only(
-                                  top: SizeConfig.blockSizeVertical * 3,
-                                  bottom: SizeConfig.blockSizeVertical * 1,
-                                  left: SizeConfig.blockSizeHorizontal * 5,
-                                ),
-                                alignment: Alignment.topLeft,
-                                child: Text(
-                                  "10:00 AM",
-                                  style: TextStyle(
-                                      letterSpacing: 1.0,
-                                      fontWeight: FontWeight.normal,
-                                      fontFamily: 'Lato-Bold',
-                                      color: AppColors.blackColor,
-                                      fontSize: 14),
-                                ),
-                              )
-                            ],
-                          ),
-                          Row(
-                            children: [
-                              Container(
-                                width: SizeConfig.blockSizeHorizontal * 65,
-                                margin: EdgeInsets.only(
-                                  bottom: SizeConfig.blockSizeVertical * 3,
-                                  top: SizeConfig.blockSizeVertical * 1,
-                                  left: SizeConfig.blockSizeHorizontal * 5,
-                                ),
-                                alignment: Alignment.topLeft,
-                                child: Text(
-                                  "Evening",
-                                  style: TextStyle(
-                                      letterSpacing: 1.0,
-                                      fontWeight: FontWeight.normal,
-                                      fontFamily: 'Lato-Bold',
-                                      color: AppColors.blackColor,
-                                      fontSize: 14),
-                                ),
-                              ),
-                              Container(
-                                margin: EdgeInsets.only(
-                                  bottom: SizeConfig.blockSizeVertical * 3,
-                                  top: SizeConfig.blockSizeVertical * 1,
-                                  left: SizeConfig.blockSizeHorizontal * 5,
-                                ),
-                                alignment: Alignment.topLeft,
-                                child: Text(
-                                  "05:00 PM",
-                                  style: TextStyle(
-                                      letterSpacing: 1.0,
-                                      fontWeight: FontWeight.normal,
-                                      fontFamily: 'Lato-Bold',
-                                      color: AppColors.blackColor,
-                                      fontSize: 14),
-                                ),
-                              )
-                            ],
-                          )
+                          Text(widget.medicineData.time),
                         ],
                       ),
                     ),

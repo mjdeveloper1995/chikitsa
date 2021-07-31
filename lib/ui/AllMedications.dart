@@ -115,7 +115,9 @@ class _AllMedicationsState extends State<AllMedications> {
                             onTap: () {
                               Navigator.of(context).push(MaterialPageRoute(
                                   builder: (BuildContext context) =>
-                                      DietPillDetails()));
+                                      DietPillDetails(
+                                          medicineList[index]
+                                      )));
                             },
                             child: Container(
                               width: SizeConfig.blockSizeHorizontal * 100,

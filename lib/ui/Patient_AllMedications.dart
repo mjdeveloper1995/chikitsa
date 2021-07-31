@@ -1,4 +1,5 @@
 import 'package:chikitsa/main.dart';
+import 'package:chikitsa/podo/medicine.dart';
 import 'package:chikitsa/ui/DietPillDetails.dart';
 import 'package:chikitsa/ui/DoctorHome.dart';
 import 'package:chikitsa/ui/EditPillDetails.dart';
@@ -108,7 +109,7 @@ class _Patient_AllMedicationsState extends State<Patient_AllMedications> {
                         onTap: () {
                           Navigator.of(context).push(MaterialPageRoute(
                               builder: (BuildContext context) =>
-                                  DietPillDetails()));
+                                  DietPillDetails(Medicine())));
                         },
                         child: Container(
                           width: SizeConfig.blockSizeHorizontal * 100,

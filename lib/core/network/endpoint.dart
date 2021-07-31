@@ -1,5 +1,5 @@
 class EndPoint {
-  static final String _baseUrl = 'https://medappconception.herokuapp.com/api/';
+  static final String _baseUrl = 'http://164.52.215.78/Chikitsa/api/';
 
   ///Auth url's
   static final String registration = _baseUrl + 'registerUser';
